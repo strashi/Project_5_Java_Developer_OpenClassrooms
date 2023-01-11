@@ -1,11 +1,10 @@
 package com.safetynet.alert.repository;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.safetynet.alert.model.FireStation;
 
-@Repository
-public interface FireStationRepository extends CrudRepository<FireStation, Long>{
+
+public interface FireStationRepository extends JpaRepository<FireStation, Long>{
 
 }

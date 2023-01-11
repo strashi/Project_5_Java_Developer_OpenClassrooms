@@ -1,12 +1,11 @@
 package com.safetynet.alert.repository;
 
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.safetynet.alert.model.MedicalRecord;
 
-@Repository
-public interface MedicalRecordRepository extends CrudRepository<MedicalRecord, Long>{
+
+public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, Long>{
 	
 	
 

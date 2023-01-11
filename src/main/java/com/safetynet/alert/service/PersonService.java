@@ -16,9 +16,9 @@ public class PersonService {
 	private PersonRepository personRepository;
 	
 	//create or update
-	public Person savePerson(Person person) {
-		Person savedPerson = personRepository.save(person);
-		return savedPerson;
+	public Person add(Person person) {
+		return personRepository.save(person);
+		
 	}
 	
 	//delete
