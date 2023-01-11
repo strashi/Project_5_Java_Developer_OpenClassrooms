@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.safetynet.alert.model.Person;
 import com.safetynet.alert.repository.PersonRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.Data;
 
 @Data
@@ -22,8 +23,15 @@ public class PersonService {
 	}
 	
 	//delete
-	public void deletePerson(Person person) {
-		personRepository.delete(person);
+	public void deletePersonById(Long id) {
+		personRepository.deleteById(id);
+	}
+	@Transactional
+	public void deletePersonByLastName(String lastName) {
+		personRepository.deletePersonByLastName(lastName);
+	}
+	public Person findPersonByFirstNameAndLastName(String firstName, String lastName) {
+		return personRepository.findPersonByFirstNameAndLastName( firstName,lastName);
 	}
 
 }
