@@ -1,5 +1,7 @@
 package com.safetynet.alert.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +36,7 @@ public class PersonService {
 		return personRepository.findPersonByFirstNameAndLastName( firstName,lastName);
 	}
 	
-	public Iterable<Person> saveListPerson(Iterable<Person> list){
+	public List<Person> saveListPersons(List<Person> list){
 		return personRepository.saveAll(list);
 	}
 

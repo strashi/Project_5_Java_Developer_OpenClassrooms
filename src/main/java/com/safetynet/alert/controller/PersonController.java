@@ -31,6 +31,7 @@ public class PersonController {
 	}
 	
 	@DeleteMapping("/person")
+	@ResponseBody
 	public void deletePersonByLastName(@RequestParam String firstName, @RequestParam String lastName) { 
 	personService.deletePersonByFirstNameAndLastName(firstName, lastName);
 	} 
