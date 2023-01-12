@@ -7,7 +7,7 @@ import com.safetynet.alert.model.Person;
 
 public interface PersonRepository extends JpaRepository<Person, Long>{
 	
-	public void deletePersonByLastName(String lastName);
+	public void deletePersonByFirstNameAndLastName(String firstName,String lastName);
 	
 	public Person findPersonByFirstNameAndLastName(String firstName, String lastName);
 }

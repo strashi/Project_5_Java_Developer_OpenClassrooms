@@ -27,11 +27,15 @@ public class PersonService {
 		personRepository.deleteById(id);
 	}
 	@Transactional
-	public void deletePersonByLastName(String lastName) {
-		personRepository.deletePersonByLastName(lastName);
+	public void deletePersonByFirstNameAndLastName(String firstName,String lastName) {
+		personRepository.deletePersonByFirstNameAndLastName(firstName,lastName);
 	}
 	public Person findPersonByFirstNameAndLastName(String firstName, String lastName) {
 		return personRepository.findPersonByFirstNameAndLastName( firstName,lastName);
+	}
+	
+	public Iterable<Person> saveListPerson(Iterable<Person> list){
+		return personRepository.saveAll(list);
 	}
 
 }
