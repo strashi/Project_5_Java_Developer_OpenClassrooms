@@ -39,9 +39,9 @@ public class AlertApplication implements CommandLineRunner{
 		//objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 		
 		JsonFileReader jsonFileReader = objectMapper.readValue(new File("src/main/resources/json/data.json"), JsonFileReader.class);
-		personService.saveListPersons(jsonFileReader.persons);
-		fireStationService.saveListFireStations(jsonFileReader.firestations);
-		medicalRecordService.saveListMedicalRecords(jsonFileReader.medicalrecords);
+		personService.saveListPersons(jsonFileReader.getPersons());
+		fireStationService.saveListFireStations(jsonFileReader.getFirestations());
+		medicalRecordService.saveListMedicalRecords(jsonFileReader.getMedicalrecords());
 	
 
 	}
