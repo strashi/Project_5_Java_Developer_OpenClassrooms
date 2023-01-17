@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alert.model.FireStation;
-import com.safetynet.alert.service.FireStationService;
+import com.safetynet.alert.service.impl.FireStationServiceImpl;
 
 @RestController
 public class FireStationController {
 	
 	@Autowired
-	private FireStationService fireStationService;
+	private FireStationServiceImpl fireStationService;
 	
 	@PostMapping("/firestation")
 	public FireStation addFireStation(@RequestBody FireStation fireStation) {

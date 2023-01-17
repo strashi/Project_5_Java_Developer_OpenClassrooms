@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alert.model.Person;
-import com.safetynet.alert.service.PersonService;
+import com.safetynet.alert.service.impl.PersonServiceImpl;
 
 
 @RestController
 public class PersonController {
 	
 	@Autowired
-	private PersonService personService;
+	private PersonServiceImpl personService;
 	
 	@PostMapping("/person")
 	public Person addPerson(@RequestBody Person person) {

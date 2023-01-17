@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alert.model.MedicalRecord;
 import com.safetynet.alert.model.Person;
-import com.safetynet.alert.service.MedicalRecordService;
+import com.safetynet.alert.service.impl.MedicalRecordServiceImpl;
 
 @RestController
 public class MedicalRecordController {
 	
 	@Autowired
-	private MedicalRecordService medicalRecordService;
+	private MedicalRecordServiceImpl medicalRecordService;
 	
 	@GetMapping("/medicalRecord/{id}")
 	public MedicalRecord getMedicalRecord(@PathVariable("id") final Long id) {
