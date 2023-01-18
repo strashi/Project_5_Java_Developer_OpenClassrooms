@@ -3,11 +3,13 @@ package com.safetynet.alert.service.impl;
 import java.io.File;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alert.dto.JsonFileReader;
 import com.safetynet.alert.service.DataInitializeService;
 
+@Service
 public class DataInitializeServiceImpl implements DataInitializeService {
 
 	@Autowired
