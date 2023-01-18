@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.safetynet.alert.model.MedicalRecord;
-import com.safetynet.alert.model.Person;
 import com.safetynet.alert.repository.MedicalRecordRepository;
 
 import lombok.Data;

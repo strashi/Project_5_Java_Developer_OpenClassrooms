@@ -3,7 +3,7 @@ package com.safetynet.alert.service;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
+import org.springframework.data.repository.query.Param;
 
 import com.safetynet.alert.model.Person;
 
@@ -21,4 +21,10 @@ public interface PersonService {
 	public Optional<Person> getPerson(final Long id);
 
 	public Person updatePerson(Person oldPerson);
+	
+	//public List<String> findAllEmailByCity(String city);
+	
+	public Iterable<String> listOfEmailByCity(String city);
+	
+	public Iterable<Person> findAllPerson();
 }

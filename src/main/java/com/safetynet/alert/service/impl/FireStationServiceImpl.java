@@ -2,10 +2,14 @@ package com.safetynet.alert.service.impl;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import com.safetynet.alert.model.FireStation;
+import com.safetynet.alert.model.Person;
 import com.safetynet.alert.repository.FireStationRepository;
 import com.safetynet.alert.service.FireStationService;
 
@@ -40,5 +44,8 @@ public class FireStationServiceImpl implements FireStationService{
 		newFireStation.setAddress(newAddress);
 		return fireStationRepository.save(newFireStation);
 	}
-
+	
+	public Iterable<String> createListOfPersonsCoveredByOneFireStation(Integer station){
+		return fireStationRepository.createListOfPersonsCoveredByOneFireStation(station);
+	}
 }

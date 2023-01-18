@@ -3,7 +3,6 @@ package com.safetynet.alert.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.TransactionScoped;
 import javax.transaction.Transactional;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -57,6 +56,17 @@ public class PersonServiceImpl {
 		newPerson.setEmail(oldPerson.getEmail());
 
 		return personRepository.save(newPerson);
+	}
+	
+	public Iterable<String> listOfEmailByCity(String city) {
+		return personRepository.listOfEmailByCity(city);
+	
+		
+		
+	}
+	
+	public Iterable<Person> findAllPerson(){
+		return personRepository.findAll();
 	}
 
 }

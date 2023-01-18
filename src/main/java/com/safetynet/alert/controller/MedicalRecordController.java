@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alert.model.MedicalRecord;
-import com.safetynet.alert.model.Person;
 import com.safetynet.alert.service.impl.MedicalRecordServiceImpl;
 
 @RestController

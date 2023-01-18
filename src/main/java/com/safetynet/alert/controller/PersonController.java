@@ -1,5 +1,6 @@
 package com.safetynet.alert.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,4 +61,17 @@ public class PersonController {
 	public Person updatePerson(@RequestBody Person person) {
 		return personService.updatePerson(person);
 	}
+	
+	@GetMapping("/communityEmail")
+	public Iterable<String> findAllEmailByCity(String city) {
+		return personService.listOfEmailByCity(city);
+	}
+	
+	@GetMapping("/persons")
+	public Iterable<Person> findAllPerson(){
+		return  personService.findAllPerson();
+	}
+	
+	
+	
 }
