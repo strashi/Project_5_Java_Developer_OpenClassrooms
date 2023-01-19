@@ -1,6 +1,6 @@
 package com.safetynet.alert.controller;
 
-import javax.transaction.Transactional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alert.model.FireStation;
-import com.safetynet.alert.model.Person;
 import com.safetynet.alert.service.impl.FireStationServiceImpl;
 
 @RestController
@@ -38,10 +37,16 @@ public class FireStationController {
 	public void deleteFireStationByAddress(@RequestParam String address) {
 		fireStationService.deleteFireStationByAddress(address);
 	}
-	
+	/*
 	@GetMapping("/firestation")
 	@ResponseBody
 	public Iterable<String> createListOfPersonsCoveredByOneFireStation(@RequestParam Integer stationNumber){
 		return fireStationService.createListOfPersonsCoveredByOneFireStation(stationNumber);
+	}*/
+	
+	@GetMapping("/firestation")
+	@ResponseBody
+	public List<String> getData(@RequestParam Integer stationNumber){
+		return fireStationService.buildResponsePersonsCoveredByFireStationWithChildrenAdultCount(stationNumber);
 	}
 }
