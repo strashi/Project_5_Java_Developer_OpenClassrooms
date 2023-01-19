@@ -29,23 +29,44 @@ public class PersonController {
 		return personService.addPerson(person);
 	}
 	
+	@PutMapping("/person")
+	public Person updatePerson(@RequestBody Person person) {
+		return personService.updatePerson(person);
+	}
+		
+	@DeleteMapping("/person")
+	@ResponseBody
+	public void deletePersonByFirstNameAndLastName(@RequestParam String firstName, @RequestParam String lastName) { 
+	personService.deletePersonByFirstNameAndLastName(firstName, lastName);
+	} 
+		
+	@GetMapping("/communityEmail")
+	public Iterable<String> listOfEmailByCity(String city) {
+		return personService.listOfEmailByCity(city);
+	}
+		
+	@GetMapping("/childAlert")
+	public List<String> childAlert(String address){
+		return  personService.getPersonsFromAddressWithBirthdate(address);
+	}
+	
+	/*
 	@DeleteMapping("/person/{id}")
 	public void deletePersonById(@PathVariable("id") Long id) {
 		personService.deletePersonById(id);
-	}
-	
-	@DeleteMapping("/person")
-	@ResponseBody
-	public void deletePersonByFirstNameLastName(@RequestParam String firstName, @RequestParam String lastName) { 
-	personService.deletePersonByFirstNameAndLastName(firstName, lastName);
-	} 
-	
+	}*/
+	/*
+	@GetMapping("/persons")
+	public Iterable<Person> findAllPerson(){
+		return  personService.findAllPerson();
+	}*/
+	/*
 	@GetMapping("/person")
 	@ResponseBody
 	public Person findPersonByFirstNameAndLastName(@RequestParam String firstName,@RequestParam String lastName) { 
 	return personService.findPersonByFirstNameAndLastName(firstName, lastName);
-	} 
-	
+	} */
+	/*
 	@GetMapping("/person/{id}")
 	public Person getPerson(@PathVariable("id") final Long id) {
 		Optional<Person> person = personService.getPerson(id);
@@ -55,23 +76,5 @@ public class PersonController {
 			return null;
 			}
 		
-	}
-	
-	@PutMapping("/person")
-	public Person updatePerson(@RequestBody Person person) {
-		return personService.updatePerson(person);
-	}
-	
-	@GetMapping("/communityEmail")
-	public Iterable<String> findAllEmailByCity(String city) {
-		return personService.listOfEmailByCity(city);
-	}
-	
-	@GetMapping("/persons")
-	public Iterable<Person> findAllPerson(){
-		return  personService.findAllPerson();
-	}
-	
-	
-	
+	}*/
 }

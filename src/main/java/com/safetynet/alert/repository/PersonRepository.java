@@ -15,10 +15,13 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 	
 	public Person findPersonByFirstNameAndLastName(String firstName, String lastName);
 	
-	//public List<String> findAllEmailByCity(String city);
-	
 	@Query(value="SELECT email FROM persons WHERE city = :city", nativeQuery = true)
 	public Iterable<String> listOfEmailByCity(@Param("city") String city);
 	
-	//public Iterable<Person> findAllPerson();
+	@Query(value="SELECT p.first_name, p.last_name, m.birthdate FROM persons p "
+			+ "JOIN medicalrecords m "
+			+ "ON p.first_name = m.first_name "
+			+ "AND p.last_name = m.last_name "
+			+ "WHERE p.address =:address", nativeQuery = true)
+	public List<List<Object>> getPersonsFromAddressWithBirthdate(@Param("address") String address);
 }

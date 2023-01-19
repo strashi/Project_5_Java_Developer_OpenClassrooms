@@ -10,21 +10,21 @@ import com.safetynet.alert.model.Person;
 public interface PersonService {
 	public Person addPerson(Person person);
 
-	public void deletePersonById(Long id);
+	//public void deletePersonById(Long id);
 
 	public void deletePersonByFirstNameAndLastName(String firstName, String lastName);
 
-	public Person findPersonByFirstNameAndLastName(String firstName, String lastName);
+	//public Person findPersonByFirstNameAndLastName(String firstName, String lastName);
 
-	public List<Person> saveListPersons(List<Person> list);
+	//public List<Person> saveListPersons(List<Person> list);
 
-	public Optional<Person> getPerson(final Long id);
+	//public Optional<Person> getPerson(final Long id);
 
 	public Person updatePerson(Person oldPerson);
 	
-	//public List<String> findAllEmailByCity(String city);
+	//public Iterable<String> listOfEmailByCity(String city);
 	
-	public Iterable<String> listOfEmailByCity(String city);
+	//public Iterable<Person> findAllPerson();
 	
-	public Iterable<Person> findAllPerson();
+	public List<String> getPersonsFromAddressWithBirthdate(String address);
 }

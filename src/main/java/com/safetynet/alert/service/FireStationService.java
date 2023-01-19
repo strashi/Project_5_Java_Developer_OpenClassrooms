@@ -9,19 +9,17 @@ import com.safetynet.alert.model.Person;
 
 public interface FireStationService {
 	public FireStation addFireStation(FireStation fireStation);
+	
+	public FireStation updateFireStation(String oldAddress, String newAddress);
 
 	public void deleteFireStationByAddress(String address);
 
-	public List<FireStation> saveListFireStations(List<FireStation> list);
+	public List<String> coveredPersonsByFireStationWithChildrenAdultCount(Integer station);
 
-	public FireStation getFireStationByAddress(String Address);
+	public List<String> phoneAlert(Integer station);
 
-	public FireStation updateFireStation(String oldAddress, String newAddress);
-	
-	//public Iterable<String> createListOfPersonsCoveredByOneFireStation(Integer station);
-	
-	public List<List<Object>> getDataAndBirthdate(@Param("station") Integer station);
-	
-	public List<String> buildResponsePersonsCoveredByFireStationWithChildrenAdultCount(Integer station);
-
+	// public List<FireStation> saveListFireStations(List<FireStation> list);
+	// public FireStation getFireStationByAddress(String Address);
+	// public Iterable<String> createListOfPersonsCoveredByOneFireStation(Integer station);
+	// public List<List<Object>> getDataAndBirthdate(Integer station);
 }

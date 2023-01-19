@@ -31,22 +31,29 @@ public class FireStationController {
 	public FireStation updateFireStation(@RequestParam String oldAddress, @RequestParam String newAddress) {
 		return fireStationService.updateFireStation(oldAddress, newAddress);
 	}
-		
+	
 	@DeleteMapping("/firestation")
 	@ResponseBody
 	public void deleteFireStationByAddress(@RequestParam String address) {
 		fireStationService.deleteFireStationByAddress(address);
 	}
+		
+	@GetMapping("/firestation")
+	@ResponseBody
+	public List<String> coveredPersonsByFireStationWithChildrenAdultCount(@RequestParam Integer stationNumber){
+		return fireStationService.coveredPersonsByFireStationWithChildrenAdultCount(stationNumber);
+	}
+	
+	@GetMapping("/phoneAlert")
+	@ResponseBody
+	public List<String> phoneAlert(@RequestParam Integer firestation){
+		return fireStationService.phoneAlert(firestation);
+	}
+	
 	/*
 	@GetMapping("/firestation")
 	@ResponseBody
 	public Iterable<String> createListOfPersonsCoveredByOneFireStation(@RequestParam Integer stationNumber){
 		return fireStationService.createListOfPersonsCoveredByOneFireStation(stationNumber);
 	}*/
-	
-	@GetMapping("/firestation")
-	@ResponseBody
-	public List<String> getData(@RequestParam Integer stationNumber){
-		return fireStationService.buildResponsePersonsCoveredByFireStationWithChildrenAdultCount(stationNumber);
-	}
 }

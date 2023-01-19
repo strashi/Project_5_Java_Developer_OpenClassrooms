@@ -21,18 +21,7 @@ public class MedicalRecordController {
 	
 	@Autowired
 	private MedicalRecordServiceImpl medicalRecordService;
-	
-	@GetMapping("/medicalRecord/{id}")
-	public MedicalRecord getMedicalRecord(@PathVariable("id") final Long id) {
-		Optional<MedicalRecord> medicalRecord = medicalRecordService.getMedicalRecord(id);
-		if(medicalRecord.isPresent()) {
-			return medicalRecord.get();
-		}else {
-			return null;
-			}
 		
-	}
-	
 	@PostMapping("/medicalRecord")
 	public MedicalRecord addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
 		return medicalRecordService.addMedicalRecord(medicalRecord);
@@ -48,5 +37,16 @@ public class MedicalRecordController {
 	public void deleteMedicalRecordByFirstNameLastName(@RequestParam String firstName, @RequestParam String lastName) { 
 		medicalRecordService.deleteMedicalRecordByFirstNameAndLastName(firstName, lastName);
 	} 
-
+	
+	/*
+	@GetMapping("/medicalRecord/{id}")
+	public MedicalRecord getMedicalRecord(@PathVariable("id") final Long id) {
+		Optional<MedicalRecord> medicalRecord = medicalRecordService.getMedicalRecord(id);
+		if(medicalRecord.isPresent()) {
+			return medicalRecord.get();
+		}else {
+			return null;
+			}
+		
+	}*/
 }

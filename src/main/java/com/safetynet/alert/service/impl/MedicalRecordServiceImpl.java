@@ -8,46 +8,51 @@ import org.springframework.stereotype.Service;
 
 import com.safetynet.alert.model.MedicalRecord;
 import com.safetynet.alert.repository.MedicalRecordRepository;
+import com.safetynet.alert.service.MedicalRecordService;
 
 import lombok.Data;
 
 @Data
 @Service
-public class MedicalRecordServiceImpl {
-	
+public class MedicalRecordServiceImpl implements MedicalRecordService {
+
 	@Autowired
 	private MedicalRecordRepository medicalRecordRepository;
-
-	public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord) {
-		return medicalRecordRepository.save(medicalRecord);
-	}
-	
-	public List<MedicalRecord> saveListMedicalRecords(List<MedicalRecord> list){
-		return medicalRecordRepository.saveAll(list);
-	}
-	
-	public Optional<MedicalRecord> getMedicalRecord(final Long id) {
-		return medicalRecordRepository.findById(id);
-	}
 
 	public MedicalRecord addMedicalRecord(MedicalRecord medicalRecord) {
 		return medicalRecordRepository.save(medicalRecord);
 	}
-
+	
 	public MedicalRecord updateMedicalRecord(MedicalRecord updatedMedicalRecord) {
-		MedicalRecord newMedicalRecord = this.findMedicalRecordByFirstNameAndLastName(updatedMedicalRecord.getFirstName(), updatedMedicalRecord.getLastName());
+		MedicalRecord newMedicalRecord = medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(
+				updatedMedicalRecord.getFirstName(), updatedMedicalRecord.getLastName());
 		newMedicalRecord.setBirthdate(updatedMedicalRecord.getBirthdate());
 		newMedicalRecord.setMedications(updatedMedicalRecord.getMedications());
 		newMedicalRecord.setAllergies(updatedMedicalRecord.getAllergies());
 		return medicalRecordRepository.save(newMedicalRecord);
 	}
 	
-	public MedicalRecord findMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
-		return medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(firstName, lastName);
-	}
-
 	public void deleteMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
-		MedicalRecord medicalRecordToDelete = this.findMedicalRecordByFirstNameAndLastName(firstName, lastName);
+		MedicalRecord medicalRecordToDelete = medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(firstName,
+				lastName);
 		medicalRecordRepository.delete(medicalRecordToDelete);
 	}
+	
+	public List<MedicalRecord> saveListMedicalRecords(List<MedicalRecord> list) {
+		return medicalRecordRepository.saveAll(list);
+	}
+	/*
+	 * public MedicalRecord saveMedicalRecord(MedicalRecord medicalRecord) { return
+	 * medicalRecordRepository.save(medicalRecord); }
+	 */
+	/*
+	 * public MedicalRecord findMedicalRecordByFirstNameAndLastName(String
+	 * firstName, String lastName) { return
+	 * medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(firstName,
+	 * lastName); }
+	 */
+	/*
+	 * public Optional<MedicalRecord> getMedicalRecord(final Long id) { return
+	 * medicalRecordRepository.findById(id); }
+	 */
 }
