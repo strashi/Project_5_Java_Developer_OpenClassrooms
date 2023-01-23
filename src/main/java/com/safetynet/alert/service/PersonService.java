@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.data.repository.query.Param;
 
+import com.safetynet.alert.dto.ResponseChildAlert;
+import com.safetynet.alert.dto.ResponsePersonInfo;
 import com.safetynet.alert.model.Person;
 
 public interface PersonService {
@@ -22,9 +24,13 @@ public interface PersonService {
 
 	public Person updatePerson(Person oldPerson);
 	
-	//public Iterable<String> listOfEmailByCity(String city);
+	public Iterable<String> listOfEmailByCity(String city);
 	
 	//public Iterable<Person> findAllPerson();
 	
 	public List<String> getPersonsFromAddressWithBirthdate(String address);
+
+	public ResponseChildAlert childAlert(String address);
+	
+	public ResponsePersonInfo personInfo(String firstName, String lastName);
 }

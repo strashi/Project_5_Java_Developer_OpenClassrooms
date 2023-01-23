@@ -12,14 +12,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safetynet.alert.dto.ResponseFire;
+import com.safetynet.alert.dto.ResponseFlood;
+import com.safetynet.alert.dto.ResponsePersonByFireStation;
 import com.safetynet.alert.model.FireStation;
-import com.safetynet.alert.service.impl.FireStationServiceImpl;
+import com.safetynet.alert.service.FireStationService;
 
 @RestController
 public class FireStationController {
 	
 	@Autowired
-	private FireStationServiceImpl fireStationService;
+	private FireStationService fireStationService;
 	
 	@PostMapping("/firestation")
 	public FireStation addFireStation(@RequestBody FireStation fireStation) {
@@ -28,8 +31,8 @@ public class FireStationController {
 	
 	@PutMapping("/firestation")
 	@ResponseBody
-	public FireStation updateFireStation(@RequestParam String oldAddress, @RequestParam String newAddress) {
-		return fireStationService.updateFireStation(oldAddress, newAddress);
+	public FireStation updateFireStation(@RequestParam String address, @RequestParam int station) {
+		return fireStationService.updateFireStation(address, station);
 	}
 	
 	@DeleteMapping("/firestation")
@@ -40,7 +43,7 @@ public class FireStationController {
 		
 	@GetMapping("/firestation")
 	@ResponseBody
-	public List<String> coveredPersonsByFireStationWithChildrenAdultCount(@RequestParam Integer stationNumber){
+	public ResponsePersonByFireStation coveredPersonsByFireStationWithChildrenAdultCount(@RequestParam Integer stationNumber){
 		return fireStationService.coveredPersonsByFireStationWithChildrenAdultCount(stationNumber);
 	}
 	
@@ -48,6 +51,25 @@ public class FireStationController {
 	@ResponseBody
 	public List<String> phoneAlert(@RequestParam Integer firestation){
 		return fireStationService.phoneAlert(firestation);
+	}
+	
+	@GetMapping("/fire")
+	@ResponseBody
+	public ResponseFire fire(@RequestParam String address){
+		return fireStationService.fire(address);
+	}
+	
+	@GetMapping("/caserne")
+	@ResponseBody
+	public int numeroCaserne(String address){
+		return fireStationService.numeroCaserne(address);
+	}
+	
+	@GetMapping("/flood")
+	@ResponseBody
+	public ResponseFlood flood(@RequestParam List<Integer> list_of_station_number) {
+		return fireStationService.flood(list_of_station_number);
+	
 	}
 	
 	/*

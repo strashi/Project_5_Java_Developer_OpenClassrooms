@@ -1,5 +1,6 @@
 package com.safetynet.alert.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +25,12 @@ public interface PersonRepository extends JpaRepository<Person, Long>{
 			+ "AND p.last_name = m.last_name "
 			+ "WHERE p.address =:address", nativeQuery = true)
 	public List<List<Object>> getPersonsFromAddressWithBirthdate(@Param("address") String address);
+
+	public List<Person> findByAddress(String address);
+
+	//public List<Person> findByAdress(String address);
+
+	public Date findByFirstNameAndLastName(String firstName, String lastName);
+
+	public List<Person> findAllByFirstNameAndLastName(String firstName, String lastName);
 }

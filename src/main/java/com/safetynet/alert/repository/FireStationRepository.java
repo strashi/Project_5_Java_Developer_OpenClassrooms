@@ -29,6 +29,10 @@ public interface FireStationRepository extends JpaRepository<FireStation, Long>{
 			+ "WHERE f.station= :station "
 			+ "AND p.address = f.address", nativeQuery = true)
 	public List<String> phoneAlert(@Param("station") Integer station);
+
+	public List<FireStation> findByStation(Integer station);
+
+	public List<FireStation> findByAddress(String address);
 	
 	/*
 	@Query(value="SELECT p.first_name, p.last_name, p.address,p.zip, p.city, p.phone, m.birthdate"

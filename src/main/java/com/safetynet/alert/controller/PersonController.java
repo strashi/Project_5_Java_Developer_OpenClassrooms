@@ -1,12 +1,8 @@
 package com.safetynet.alert.controller;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,15 +10,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.safetynet.alert.dto.ResponseChildAlert;
+import com.safetynet.alert.dto.ResponsePersonInfo;
 import com.safetynet.alert.model.Person;
-import com.safetynet.alert.service.impl.PersonServiceImpl;
+import com.safetynet.alert.service.PersonService;
 
 
 @RestController
 public class PersonController {
 	
 	@Autowired
-	private PersonServiceImpl personService;
+	private PersonService personService;
 	
 	@PostMapping("/person")
 	public Person addPerson(@RequestBody Person person) {
@@ -46,9 +44,18 @@ public class PersonController {
 	}
 		
 	@GetMapping("/childAlert")
-	public List<String> childAlert(String address){
-		return  personService.getPersonsFromAddressWithBirthdate(address);
+	public ResponseChildAlert childAlert(String address){
+		return  personService.childAlert(address);
 	}
+	
+	@GetMapping("/personInfo")
+	public ResponsePersonInfo personInfo(@RequestParam String firstName, @RequestParam String lastName){
+		return  personService.personInfo(firstName, lastName);
+	}
+	/*
+	@GetMapping("/childAlert")
+	public List<String> childAlert(String address){
+		re*/
 	
 	/*
 	@DeleteMapping("/person/{id}")
