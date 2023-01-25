@@ -3,6 +3,8 @@ package com.safetynet.alert.service.impl;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +29,8 @@ import lombok.Data;
 @Service
 public class FireStationServiceImpl implements FireStationService {
 
+	private static final Logger logger = LoggerFactory.getLogger(FireStationServiceImpl.class);
+
 	@Autowired
 	private FireStationRepository fireStationRepository;
 
@@ -40,108 +44,165 @@ public class FireStationServiceImpl implements FireStationService {
 	private ModelMapper modelMapper;
 
 	@Autowired
-	private Util util;
+	private UtilServiceImpl util;
 
 	public FireStation addFireStation(FireStation fireStation) {
-		return fireStationRepository.save(fireStation);
+		logger.debug("traitement addFireStation en cours chez FireStationServiceImpl");
+		try {
+			logger.info("traitement addFireStation réussi chez FireStationServiceImpl!");
+			return fireStationRepository.save(fireStation);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+			return null;
+		}
 	}
 
 	public FireStation updateFireStation(String address, int station) {
-		FireStation newFireStation = fireStationRepository.getFireStationByAddress(address);
-		newFireStation.setStation(station);
-		return fireStationRepository.save(newFireStation);
+		logger.debug("traitement updateFireStation en cours chez FireStationServiceImpl");
+		try {
+			FireStation newFireStation = fireStationRepository.getFireStationByAddress(address);
+			newFireStation.setStation(station);
+			logger.info("traitement updateFireStation réussi chez FireStationServiceImpl!");
+			return fireStationRepository.save(newFireStation);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+			return null;
+		}
+
 	}
 
 	public void deleteFireStationByAddress(String address) {
-		FireStation fireStationToDelete = fireStationRepository.getFireStationByAddress(address);
-		fireStationRepository.delete(fireStationToDelete);
+		logger.debug("traitement deleteFireStation en cours chez FireStationServiceImpl");
+		try {
+			FireStation fireStationToDelete = fireStationRepository.getFireStationByAddress(address);
+			fireStationRepository.delete(fireStationToDelete);
+			logger.info("traitement deleteFireStation réussi chez FireStationServiceImpl!");
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+
+		}
+
 	}
 
 	@Override
 	public List<String> phoneAlert(Integer station) {
-		return fireStationRepository.phoneAlert(station);
+		logger.debug("traitement phoneAlert en cours chez FireStationServiceImpl");
+		try {
+			logger.info("traitement phoneAlert réussi chez FireStationServiceImpl!");
+			return fireStationRepository.phoneAlert(station);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+			return null;
+		}
 	}
 
 	@Override
 	public ResponsePersonByFireStation coveredPersonsByFireStationWithChildrenAdultCount(Integer station) {
-		ResponsePersonByFireStation response = new ResponsePersonByFireStation();
-		List<FireStation> listOfStations = fireStationRepository.findByStation(station);
-		int nbreAdulte = 0;
-		int nbreEnfant = 0;
-		for (FireStation fireStation : listOfStations) {
-			List<Person> personList = personRepository.findByAddress(fireStation.getAddress());
-			for (Person person : personList) {
-				PersonDTO personDTO = modelMapper.map(person, PersonDTO.class);
-				personDTO.setAge(util.getAge(person));
-				if (personDTO.getAge() >= 19)
-					nbreAdulte++;
-				else
-					nbreEnfant++;
-				response.getPersons().add(personDTO);
-			}
+		logger.debug("traitement coveredPersonsByFireStation en cours chez FireStationServiceImpl");
+		try {
 
+			ResponsePersonByFireStation response = new ResponsePersonByFireStation();
+			List<FireStation> listOfStations = fireStationRepository.findByStation(station);
+			int nbreAdulte = 0;
+			int nbreEnfant = 0;
+			for (FireStation fireStation : listOfStations) {
+				List<Person> personList = personRepository.findByAddress(fireStation.getAddress());
+				for (Person person : personList) {
+					PersonDTO personDTO = modelMapper.map(person, PersonDTO.class);
+					personDTO.setAge(util.getAge(person));
+					if (personDTO.getAge() >= 19)
+						nbreAdulte++;
+					else
+						nbreEnfant++;
+					response.getPersons().add(personDTO);
+				}
+
+			}
+			response.setNumberOfAdults(nbreAdulte);
+			response.setNumberOfChildren(nbreEnfant);
+			logger.info("traitement coveredPersonsByFireStation réussi chez FireStationServiceImpl!");
+
+			return response;
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+			return null;
 		}
-		response.setNumberOfAdults(nbreAdulte);
-		response.setNumberOfChildren(nbreEnfant);
-		return response;
 	}
 
 	public ResponseFire fire(String address) {
-		ResponseFire response = new ResponseFire();
+		logger.debug("traitement fire en cours chez FireStationServiceImpl");
+		try {
 
-		List<FireStation> fireStationsList = fireStationRepository.findByAddress(address);
-		for (FireStation firestation : fireStationsList) {
-			response.getStation().add(firestation.getStation());
-		}
+			ResponseFire response = new ResponseFire();
 
-		List<Person> residentsList = personRepository.findByAddress(address);
-		for (Person person : residentsList) {
-			PersonWithMedicalRecordDTO personWithMedicalRecordDTO = modelMapper.map(person,
-					PersonWithMedicalRecordDTO.class);
-			personWithMedicalRecordDTO.setAge(util.getAge(person));
-
-			List<MedicalRecord> medicalRecordsList = medicalRecordRepository
-					.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
-			for (MedicalRecord medicalRecord : medicalRecordsList) {
-				personWithMedicalRecordDTO.getMedications().addAll(medicalRecord.getMedications());
-				personWithMedicalRecordDTO.getAllergies().addAll(medicalRecord.getAllergies());
+			List<FireStation> fireStationsList = fireStationRepository.findByAddress(address);
+			for (FireStation firestation : fireStationsList) {
+				response.getStation().add(firestation.getStation());
 			}
 
-			response.getResidents().add(personWithMedicalRecordDTO);
-		}
-		return response;
+			List<Person> residentsList = personRepository.findByAddress(address);
+			for (Person person : residentsList) {
+				PersonWithMedicalRecordDTO personWithMedicalRecordDTO = modelMapper.map(person,
+						PersonWithMedicalRecordDTO.class);
+				personWithMedicalRecordDTO.setAge(util.getAge(person));
 
+				List<MedicalRecord> medicalRecordsList = medicalRecordRepository
+						.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+				for (MedicalRecord medicalRecord : medicalRecordsList) {
+					personWithMedicalRecordDTO.getMedications().addAll(medicalRecord.getMedications());
+					personWithMedicalRecordDTO.getAllergies().addAll(medicalRecord.getAllergies());
+				}
+
+				response.getResidents().add(personWithMedicalRecordDTO);
+			}
+			logger.info("traitement fire réussi chez FireStationServiceImpl!");
+
+			return response;
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+
+			return null;
+		}
 	}
 
 	public ResponseFlood flood(List<Integer> numbersOfStations) {
-		ResponseFlood response = new ResponseFlood();
+		logger.debug("traitement flood en cours chez FireStationServiceImpl");
+		try {
 
-		for (Integer station : numbersOfStations) {
-			ResidentsByStation residentsByStation = new ResidentsByStation();
-			residentsByStation.setStationNumber("Station " + station);
-			List<FireStation> listOfStations = fireStationRepository.findByStation(station);
-			for (FireStation fireStation : listOfStations) {
-				Address address = new Address();
-				address.setAddress(fireStation.getAddress());
-				List<Person> residentsList = personRepository.findByAddress(address.getAddress());
-				for (Person person : residentsList) {
-					PersonWithMedicalRecordDTO personWithMedicalRecordDTO = modelMapper.map(person,
-							PersonWithMedicalRecordDTO.class);
-					personWithMedicalRecordDTO.setAge(util.getAge(person));
+			ResponseFlood response = new ResponseFlood();
 
-					List<MedicalRecord> medicalRecordsList = medicalRecordRepository
-							.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
-					for (MedicalRecord medicalRecord : medicalRecordsList) {
-						personWithMedicalRecordDTO.getAllergies().addAll(medicalRecord.getAllergies());
+			for (Integer station : numbersOfStations) {
+				ResidentsByStation residentsByStation = new ResidentsByStation();
+				residentsByStation.setStationNumber("Station " + station);
+				List<FireStation> listOfStations = fireStationRepository.findByStation(station);
+				for (FireStation fireStation : listOfStations) {
+					Address address = new Address();
+					address.setAddress(fireStation.getAddress());
+					List<Person> residentsList = personRepository.findByAddress(address.getAddress());
+					for (Person person : residentsList) {
+						PersonWithMedicalRecordDTO personWithMedicalRecordDTO = modelMapper.map(person,
+								PersonWithMedicalRecordDTO.class);
+						personWithMedicalRecordDTO.setAge(util.getAge(person));
+
+						List<MedicalRecord> medicalRecordsList = medicalRecordRepository
+								.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+						for (MedicalRecord medicalRecord : medicalRecordsList) {
+							personWithMedicalRecordDTO.getAllergies().addAll(medicalRecord.getAllergies());
+						}
+						address.getListOfPersonsWithMedicalRecordDTO().add(personWithMedicalRecordDTO);
 					}
-					address.getListOfPersonsWithMedicalRecordDTO().add(personWithMedicalRecordDTO);
+					residentsByStation.getAddressesServedByFireStation().add(address);
 				}
-				residentsByStation.getAddressesServedByFireStation().add(address);
+				response.getResidentsByStation().add(residentsByStation);
+
 			}
-			response.getResidentsByStation().add(residentsByStation);
+			logger.info("traitement flood réussi chez FireStationServiceImpl!");
 
+			return response;
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+
+			return null;
 		}
-		return response;
 	}
-
 }

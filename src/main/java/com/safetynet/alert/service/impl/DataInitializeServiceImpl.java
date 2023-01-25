@@ -2,6 +2,8 @@ package com.safetynet.alert.service.impl;
 
 import java.io.File;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +16,10 @@ import com.safetynet.alert.service.DataInitializeService;
 
 @Service
 public class DataInitializeServiceImpl implements DataInitializeService {
-		
-	@Autowired 
+	
+	private static final Logger logger = LoggerFactory.getLogger(DataInitializeServiceImpl.class);
+
+	@Autowired
 	private MedicalRecordRepository medicalRecordRepository;
 	@Autowired
 	private PersonRepository personRepository;
@@ -24,14 +28,18 @@ public class DataInitializeServiceImpl implements DataInitializeService {
 
 	@Override
 	public void readJsonFile() {
+		logger.debug("traitement readJsonFile en cours chez DataInitializeServiceImpl");
+
 		try {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonFileReader jsonFileReader = objectMapper.readValue(new File("src/main/resources/json/data.json"),
 					JsonFileReader.class);
-			
+
 			personRepository.saveAll(jsonFileReader.getPersons());
 			fireStationRepository.saveAll(jsonFileReader.getFirestations());
 			medicalRecordRepository.saveAll(jsonFileReader.getMedicalrecords());
+			logger.info("traitement readJsonFile réussi chez DataInitializeServiceImpl!");
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
