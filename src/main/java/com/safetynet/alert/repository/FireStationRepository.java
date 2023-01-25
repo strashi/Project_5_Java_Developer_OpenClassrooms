@@ -13,16 +13,6 @@ public interface FireStationRepository extends JpaRepository<FireStation, Long>{
 	
 	public FireStation getFireStationByAddress(String address);
 	
-	@Query(value="SELECT p.first_name, p.last_name, p.address,p.zip, p.city, p.phone, m.birthdate"
-			+ " FROM persons p "
-			+ "JOIN firestations f "
-			+ "JOIN medicalrecords m "
-			+ "WHERE f.station = :station "
-			+ "AND f.address = p.address "
-			+ "AND p.first_name = m.first_name "
-			+ "AND p.last_name = m.last_name", nativeQuery = true)
-	public List<List<Object>> getDataFromPersonsAndBirthdate(@Param("station") Integer station);
-	
 	@Query(value="SELECT p.phone "
 			+ "FROM persons p "
 			+ "JOIN firestations f "
@@ -34,16 +24,5 @@ public interface FireStationRepository extends JpaRepository<FireStation, Long>{
 
 	public List<FireStation> findByAddress(String address);
 	
-	/*
-	@Query(value="SELECT p.first_name, p.last_name, p.address,p.zip, p.city, p.phone, m.birthdate"
-			+ " FROM persons p "
-			+ "JOIN firestations f "
-			+ "JOIN medicalrecords m "
-			+ "WHERE f.station = :station "
-			+ "AND f.address = p.address "
-			+ "AND p.first_name = m.first_name "
-			+ "AND p.last_name = m.last_name", nativeQuery = true)
-	public Iterable<String> createListOfPersonsCoveredByOneFireStation(@Param("station") Integer station);
-	*/
 }
 

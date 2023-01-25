@@ -17,7 +17,7 @@ public class AlertApplication{
 	}
 	
 	@Bean
-	public ModelMapper modelMapper() {
+	ModelMapper modelMapper() {
 		return new ModelMapper();
 	}
 		

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.safetynet.alert.model.Allergie;
-import com.safetynet.alert.model.MedicalRecord;
 import com.safetynet.alert.model.Medication;
 
 import lombok.Data;
@@ -16,7 +15,6 @@ public class PersonWithMedicalRecordDTO {
 	private String lastName;
 	private String phone;
 	private int age;
-	//private List<MedicalRecordDTO> medicalRecordDTOList = new ArrayList<>();
 	
 	List<Medication> medications = new ArrayList<>();
 	

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.safetynet.alert.dto.Address;
-import com.safetynet.alert.dto.MedicalRecordDTO;
 import com.safetynet.alert.dto.PersonDTO;
 import com.safetynet.alert.dto.PersonWithMedicalRecordDTO;
 import com.safetynet.alert.dto.ResidentsByStation;
@@ -54,36 +53,9 @@ public class FireStationServiceImpl implements FireStationService {
 	}
 
 	public void deleteFireStationByAddress(String address) {
-		FireStation fireStation = fireStationRepository.getFireStationByAddress(address);
-		fireStationRepository.delete(fireStation);
+		FireStation fireStationToDelete = fireStationRepository.getFireStationByAddress(address);
+		fireStationRepository.delete(fireStationToDelete);
 	}
-	/*
-	 * @Override public List<String>
-	 * coveredPersonsByFireStationWithChildrenAdultCount(Integer station) {
-	 * 
-	 * int childrenNumber = 0, adultsNumber = 0; String separation =
-	 * "=====================";
-	 * 
-	 * List<List<Object>> metaAL =
-	 * fireStationRepository.getDataFromPersonsAndBirthdate(station);
-	 * ArrayList<String> newAL = new ArrayList<>(); for( List<Object> listObject :
-	 * metaAL) { for(int i = 0; i<6 ; i++) { String param =
-	 * (listObject.get(i)).toString(); newAL.add(param); } newAL.add(separation);
-	 * 
-	 * Date birthdate = (Date) (listObject.get(6));
-	 * 
-	 * String ageCategory = util.determineAgeCategory(util.calculateAge(birthdate));
-	 * if(ageCategory.equals("enfant")) childrenNumber ++;
-	 * if(ageCategory.equals("adulte")) adultsNumber ++; }
-	 * 
-	 * String counterChildren = "Nombre d'enfants (<= 18 ans) : " + childrenNumber;
-	 * newAL.add(counterChildren); String counterAdults =
-	 * "Nombre d'adultes             : "+ adultsNumber; newAL.add(counterAdults);
-	 * 
-	 * return newAL;
-	 * 
-	 * }
-	 */
 
 	@Override
 	public List<String> phoneAlert(Integer station) {
@@ -114,10 +86,6 @@ public class FireStationServiceImpl implements FireStationService {
 		return response;
 	}
 
-	public int numeroCaserne(String address) {
-		return 0;
-	}
-
 	public ResponseFire fire(String address) {
 		ResponseFire response = new ResponseFire();
 
@@ -125,13 +93,6 @@ public class FireStationServiceImpl implements FireStationService {
 		for (FireStation firestation : fireStationsList) {
 			response.getStation().add(firestation.getStation());
 		}
-
-		// response.setStation(stationNumber);
-		/*
-		 * List<Integer> stationList = fireStationRepository.findByAddress(address);
-		 * //response.setStation(fireStationRepository.findByAddress(address));
-		 * for(Integer integer : stationList) { response.getStation().add(integer); }
-		 */
 
 		List<Person> residentsList = personRepository.findByAddress(address);
 		for (Person person : residentsList) {
@@ -142,9 +103,8 @@ public class FireStationServiceImpl implements FireStationService {
 			List<MedicalRecord> medicalRecordsList = medicalRecordRepository
 					.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
 			for (MedicalRecord medicalRecord : medicalRecordsList) {
-				MedicalRecordDTO medicalRecordDTO = modelMapper.map(medicalRecord, MedicalRecordDTO.class);
-				personWithMedicalRecordDTO.setMedications(medicalRecordDTO.getMedications());
-				personWithMedicalRecordDTO.setAllergies(medicalRecordDTO.getAllergies());
+				personWithMedicalRecordDTO.getMedications().addAll(medicalRecord.getMedications());
+				personWithMedicalRecordDTO.getAllergies().addAll(medicalRecord.getAllergies());
 			}
 
 			response.getResidents().add(personWithMedicalRecordDTO);
@@ -172,12 +132,9 @@ public class FireStationServiceImpl implements FireStationService {
 					List<MedicalRecord> medicalRecordsList = medicalRecordRepository
 							.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
 					for (MedicalRecord medicalRecord : medicalRecordsList) {
-						MedicalRecordDTO medicalRecordDTO = modelMapper.map(medicalRecord, MedicalRecordDTO.class);
-						personWithMedicalRecordDTO.setMedications(medicalRecordDTO.getMedications());
-						personWithMedicalRecordDTO.setAllergies(medicalRecordDTO.getAllergies());
+						personWithMedicalRecordDTO.getAllergies().addAll(medicalRecord.getAllergies());
 					}
 					address.getListOfPersonsWithMedicalRecordDTO().add(personWithMedicalRecordDTO);
-
 				}
 				residentsByStation.getAddressesServedByFireStation().add(address);
 			}
@@ -186,20 +143,5 @@ public class FireStationServiceImpl implements FireStationService {
 		}
 		return response;
 	}
-	/*
-	 * public FireStation getFireStationByAddress(String address) { return
-	 * fireStationRepository.getFireStationByAddress(address); }
-	 */
-	/*
-	 * public Iterable<String> createListOfPersonsCoveredByOneFireStation(Integer
-	 * station){ return
-	 * fireStationRepository.createListOfPersonsCoveredByOneFireStation(station); }
-	 *//*
-		 * public List<List<Object>> getDataAndBirthdate(Integer station){ return
-		 * fireStationRepository.getDataAndBirthdate(station); }
-		 */
-	/*
-	 * public List<FireStation> saveListFireStations(List<FireStation> list) {
-	 * return fireStationRepository.saveAll(list); }
-	 */
+
 }

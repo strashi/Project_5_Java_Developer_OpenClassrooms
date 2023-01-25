@@ -1,10 +1,7 @@
 package com.safetynet.alert.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.transaction.Transactional;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.modelmapper.ModelMapper;
@@ -56,51 +53,13 @@ public class PersonServiceImpl implements PersonService {
 		return personRepository.save(newPerson);
 	}
 
-	@Transactional
 	public void deletePersonByFirstNameAndLastName(String firstName, String lastName) {
-		personRepository.deletePersonByFirstNameAndLastName(firstName, lastName);
+		Person personToDelete = personRepository.findPersonByFirstNameAndLastName(firstName, lastName);
+		personRepository.delete(personToDelete);
 	}
 
 	public Iterable<String> listOfEmailByCity(String city) {
 		return personRepository.listOfEmailByCity(city);
-	}
-
-	@Override
-	public List<String> getPersonsFromAddressWithBirthdate(String address) {
-
-		List<List<Object>> metaAL = personRepository.getPersonsFromAddressWithBirthdate(address);
-		ArrayList<String> newAL = new ArrayList<>();
-		ArrayList<String> bufferedAL = new ArrayList<>();
-		int numberOfObject = metaAL.size();
-
-		for (List<Object> listObject : metaAL) {
-			Date birthdate = (Date) (listObject.get(2));
-
-			String ageCategory = util.determineAgeCategory(util.calculateAge(birthdate));
-
-			if (ageCategory.equals("adulte")) {
-
-				for (int i = 0; i < 2; i++) {
-					String param = (listObject.get(i)).toString();
-					bufferedAL.add(param);
-				}
-			}
-
-			if (ageCategory.equals("enfant")) {
-				newAL.add("====Enfant====");
-				for (int i = 0; i < 2; i++) {
-					String param = (listObject.get(i)).toString();
-					newAL.add(param);
-				}
-				int age = util.calculateAge(birthdate);
-				newAL.add("Age : " + age + " ans");
-				newAL.add("==Membres du foyer==");
-				for (String str : bufferedAL) {
-					newAL.add(str);
-				}
-			}
-		}
-		return newAL;
 	}
 
 	public ResponseChildAlert childAlert(String address) {
@@ -125,7 +84,7 @@ public class PersonServiceImpl implements PersonService {
 		List<Person> personList = personRepository.findAllByFirstNameAndLastName(firstName, lastName);
 		for (Person person : personList) {
 			InfoPerson infoPerson = modelMapper.map(person, InfoPerson.class);
-
+			infoPerson.setAge(util.getAge(person));
 			List<MedicalRecord> medicalRecordsList = medicalRecordRepository.findByFirstNameAndLastName(firstName,
 					lastName);
 			for (MedicalRecord medicalRecord : medicalRecordsList) {
@@ -138,24 +97,4 @@ public class PersonServiceImpl implements PersonService {
 		return response;
 	}
 
-	/*
-	 * public List<Person> saveListPersons(List<Person> list) { return
-	 * personRepository.saveAll(list); }
-	 */
-	/*
-	 * public Optional<Person> getPerson(final Long id) { return
-	 * personRepository.findById(id); }
-	 */
-	/*
-	 * public Iterable<Person> findAllPerson() { return personRepository.findAll();
-	 * }
-	 */
-	/*
-	 * public void deletePersonById(Long id) { personRepository.deleteById(id); }
-	 */
-	/*
-	 * public Person findPersonByFirstNameAndLastName(String firstName, String
-	 * lastName) { return
-	 * personRepository.findPersonByFirstNameAndLastName(firstName, lastName); }
-	 */
 }

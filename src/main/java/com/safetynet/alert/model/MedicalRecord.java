@@ -23,23 +23,20 @@ public class MedicalRecord {
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date birthdate;
 	
-
-	@ManyToMany
-	(
+	@ManyToMany(
 			fetch = FetchType.LAZY,
-				cascade = { 
-						CascadeType.PERSIST, 
-						CascadeType.MERGE 
-						}	
+			cascade = { 
+					CascadeType.PERSIST, 
+					CascadeType.MERGE 
+					}	
+			)
+			@JoinTable(
+					name = "medicalRecord_medication",
+					joinColumns = @JoinColumn(name = "medicalRecord_id"), 	
+					inverseJoinColumns = @JoinColumn(name = "medication_id")
 				)
-				@JoinTable(
-						name = "medicalRecord_medication",
-						joinColumns = @JoinColumn(name = "medicalRecord_id"), 	
-						inverseJoinColumns = @JoinColumn(name = "medication_id")
-				)
-		List<Medication> medications = new ArrayList<>();
-	
-	
+	List<Medication> medications = new ArrayList<>();
+		
 	@ManyToMany(
 			fetch = FetchType.LAZY,
 			cascade = { 
@@ -49,7 +46,8 @@ public class MedicalRecord {
 			)
 			@JoinTable(
 					name = "medicalRecord_allergie",
-					joinColumns = @JoinColumn(name = "medicalRecord_id")
-				)
+					joinColumns = @JoinColumn(name = "medicalRecord_id"),
+					inverseJoinColumns = @JoinColumn(name = "allergie_id")
+			)
 	List<Allergie> allergies = new ArrayList<>();
 }

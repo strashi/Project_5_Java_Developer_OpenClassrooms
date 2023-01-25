@@ -7,7 +7,9 @@ import lombok.Data;
 
 @Data
 public class ResponsePersonByFireStation {
+	
 	private List<PersonDTO> persons = new ArrayList<>();
+	
 	private int numberOfChildren;
 	private int numberOfAdults;
 }

@@ -14,14 +14,7 @@ import com.safetynet.alert.service.DataInitializeService;
 
 @Service
 public class DataInitializeServiceImpl implements DataInitializeService {
-	/*
-	@Autowired
-	private PersonServiceImpl personService;
-	@Autowired
-	private FireStationServiceImpl fireStationService;
-	@Autowired
-	private MedicalRecordServiceImpl medicalRecordService;*/
-	
+		
 	@Autowired 
 	private MedicalRecordRepository medicalRecordRepository;
 	@Autowired
@@ -35,11 +28,9 @@ public class DataInitializeServiceImpl implements DataInitializeService {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonFileReader jsonFileReader = objectMapper.readValue(new File("src/main/resources/json/data.json"),
 					JsonFileReader.class);
-			//personService.saveListPersons(jsonFileReader.getPersons());
+			
 			personRepository.saveAll(jsonFileReader.getPersons());
-			//fireStationService.saveListFireStations(jsonFileReader.getFirestations());
 			fireStationRepository.saveAll(jsonFileReader.getFirestations());
-			//medicalRecordService.saveListMedicalRecords(jsonFileReader.getMedicalrecords());
 			medicalRecordRepository.saveAll(jsonFileReader.getMedicalrecords());
 		} catch (Exception ex) {
 			ex.printStackTrace();

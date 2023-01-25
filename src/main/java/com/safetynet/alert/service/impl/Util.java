@@ -18,14 +18,7 @@ public class Util {
 	
 	@Autowired
 	private MedicalRecordRepository medicalRecordRepository;
-
-	String determineAgeCategory(int age) {
-		if(age < 19)
-			return "enfant";
-		else
-			return "adulte";
-	}
-
+	
 	int calculateAge(Date birthdate) {
 		 LocalDate birthdateFormated = birthdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		 LocalDate now = LocalDate.now();

@@ -15,8 +15,7 @@ public class InfoPerson {
 	private String lastName;
 	private String email;
 	private int age;
-	//private List<MedicalRecordDTO> medicalRecordDTOList = new ArrayList<>();
-	
+
 	List<Medication> medications = new ArrayList<>();
 	
 	List<Allergie> allergies = new ArrayList<>();

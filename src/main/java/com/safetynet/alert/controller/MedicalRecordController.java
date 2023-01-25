@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.safetynet.alert.model.MedicalRecord;
@@ -14,35 +13,23 @@ import com.safetynet.alert.service.MedicalRecordService;
 
 @RestController
 public class MedicalRecordController {
-	
+
 	@Autowired
 	private MedicalRecordService medicalRecordService;
-		
+
 	@PostMapping("/medicalRecord")
 	public MedicalRecord addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
 		return medicalRecordService.addMedicalRecord(medicalRecord);
 	}
-	
+
 	@PutMapping("/medicalRecord")
 	public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
 		return medicalRecordService.updateMedicalRecord(medicalRecord);
 	}
-	
+
 	@DeleteMapping("/medicalRecord")
-	@ResponseBody
-	public void deleteMedicalRecordByFirstNameLastName(@RequestParam String firstName, @RequestParam String lastName) { 
+	public void deleteMedicalRecordByFirstNameLastName(@RequestParam String firstName, @RequestParam String lastName) {
 		medicalRecordService.deleteMedicalRecordByFirstNameAndLastName(firstName, lastName);
-	} 
-	
-	/*
-	@GetMapping("/medicalRecord/{id}")
-	public MedicalRecord getMedicalRecord(@PathVariable("id") final Long id) {
-		Optional<MedicalRecord> medicalRecord = medicalRecordService.getMedicalRecord(id);
-		if(medicalRecord.isPresent()) {
-			return medicalRecord.get();
-		}else {
-			return null;
-			}
-		
-	}*/
+	}
+
 }
