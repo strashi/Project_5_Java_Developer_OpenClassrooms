@@ -25,38 +25,38 @@ public class UtilServiceImpl implements UtilService{
 	private MedicalRecordRepository medicalRecordRepository;
 
 	public int calculateAge(Date birthdate) {
-		logger.debug("traitement calculateAge en cours chez Util");
+		logger.debug("traitement calculateAge en cours chez UtilServiceImpl");
 		try {
 
 			LocalDate birthdateFormated = birthdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 			LocalDate now = LocalDate.now();
 			Period period = Period.between(birthdateFormated, now);
 
-			logger.debug("traitement calculateAge réussi chez Util");
+			logger.debug("traitement calculateAge réussi chez UtilServiceImpl");
 			return period.getYears();
 		} catch (Exception e) {
-			logger.error("traitement calculateAge échoué chez Util", e);
+			logger.error("traitement calculateAge échoué chez UtilServiceImpl", e);
 
 			return -1;
 		}
 	}
 
 	public int getAge(Person person) {
-		logger.debug("traitement getAge en cours chez Util");
+		logger.debug("traitement getAge en cours chez UtilServiceImpl");
 		try {
 
 			List<MedicalRecord> medicalRecords = medicalRecordRepository
 					.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
 			for (MedicalRecord medicalRecord : medicalRecords) {
 				if (medicalRecord.getBirthdate() != null) {
-					logger.debug("traitement getAge réussi chez Util");
+					logger.debug("traitement getAge réussi chez UtilServiceImpl");
 
 					return calculateAge(medicalRecord.getBirthdate());
 				}
 			}
 			return -1;
 		} catch (Exception e) {
-			logger.error("traitement getAge échoué chez Util", e);
+			logger.error("traitement getAge échoué chez UtilServiceImpl", e);
 
 			return -1;
 		}

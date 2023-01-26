@@ -62,7 +62,7 @@ public class PersonController {
 	}
 
 	@GetMapping("/communityEmail")
-	public Iterable<String> listOfEmailByCity(String city) {
+	public Iterable<String> listOfEmailByCity(@RequestParam String city) {
 		logger.debug("requête list of email envoyée de PersonController");
 		try {
 			logger.info("requête list of email réussie chez PersonController!");
@@ -74,7 +74,7 @@ public class PersonController {
 	}
 
 	@GetMapping("/childAlert")
-	public ResponseChildAlert childAlert(String address) {
+	public ResponseChildAlert childAlert(@RequestParam String address) {
 		logger.debug("requête childAlert envoyée de PersonController");
 		try {
 			logger.info("requête childAlert réussie chez PersonController!");
