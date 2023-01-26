@@ -18,6 +18,7 @@ import com.safetynet.alert.model.Person;
 import com.safetynet.alert.repository.MedicalRecordRepository;
 import com.safetynet.alert.repository.PersonRepository;
 import com.safetynet.alert.service.PersonService;
+import com.safetynet.alert.service.UtilService;
 
 import lombok.Data;
 
@@ -38,7 +39,7 @@ public class PersonServiceImpl implements PersonService {
 	private ModelMapper modelMapper;
 
 	@Autowired
-	private UtilServiceImpl util;
+	private UtilService util;
 
 	public Person addPerson(Person person) {
 		logger.debug("traitement addPerson en cours chez PersonServiceImpl");

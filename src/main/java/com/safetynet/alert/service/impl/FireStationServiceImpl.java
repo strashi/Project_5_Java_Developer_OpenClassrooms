@@ -22,6 +22,7 @@ import com.safetynet.alert.repository.FireStationRepository;
 import com.safetynet.alert.repository.MedicalRecordRepository;
 import com.safetynet.alert.repository.PersonRepository;
 import com.safetynet.alert.service.FireStationService;
+import com.safetynet.alert.service.UtilService;
 
 import lombok.Data;
 
@@ -44,7 +45,7 @@ public class FireStationServiceImpl implements FireStationService {
 	private ModelMapper modelMapper;
 
 	@Autowired
-	private UtilServiceImpl util;
+	private UtilService util;
 
 	public FireStation addFireStation(FireStation fireStation) {
 		logger.debug("traitement addFireStation en cours chez FireStationServiceImpl");
