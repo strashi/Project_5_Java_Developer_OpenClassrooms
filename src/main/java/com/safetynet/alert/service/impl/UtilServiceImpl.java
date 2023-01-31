@@ -46,7 +46,7 @@ public class UtilServiceImpl implements UtilService{
 		try {
 
 			List<MedicalRecord> medicalRecords = medicalRecordRepository
-					.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+					.findMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
 			for (MedicalRecord medicalRecord : medicalRecords) {
 				if (medicalRecord.getBirthdate() != null) {
 					logger.debug("traitement getAge réussi chez UtilServiceImpl");

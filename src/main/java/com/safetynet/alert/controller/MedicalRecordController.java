@@ -1,5 +1,7 @@
 package com.safetynet.alert.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +37,11 @@ public class MedicalRecordController {
 	}
 
 	@PutMapping("/medicalRecord")
-	public MedicalRecord updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
+	public List<MedicalRecord> updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
 		logger.debug("requête updateMedicalRecord envoyée de MedicalRecordController");
 		try {
 			logger.info("requête updateMedicalRecord réussie chez MedicalRecordController!");
-			return medicalRecordService.addMedicalRecord(medicalRecord);
+			return medicalRecordService.updateMedicalRecord(medicalRecord);
 		}catch(Exception e) {
 			logger.error("marche pas :(",e);
 			return null;

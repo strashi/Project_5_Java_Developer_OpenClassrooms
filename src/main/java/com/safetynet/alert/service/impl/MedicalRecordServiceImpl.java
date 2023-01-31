@@ -1,5 +1,8 @@
 package com.safetynet.alert.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,17 +34,22 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 		}
 	}
 
-	public MedicalRecord updateMedicalRecord(MedicalRecord updatedMedicalRecord) {
+	public List<MedicalRecord> updateMedicalRecord(MedicalRecord updatedMedicalRecord) {
 		logger.debug("traitement addMedicalRecord en cours chez MedicalRecordServiceImpl");
+		List<MedicalRecord> updatedMedicalRecordList = new ArrayList<>();
 		try {
-			MedicalRecord newMedicalRecord = medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(
+			List<MedicalRecord> newMedicalRecordList = medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(
 					updatedMedicalRecord.getFirstName(), updatedMedicalRecord.getLastName());
-			newMedicalRecord.setBirthdate(updatedMedicalRecord.getBirthdate());
-			newMedicalRecord.setMedications(updatedMedicalRecord.getMedications());
-			newMedicalRecord.setAllergies(updatedMedicalRecord.getAllergies());
+			for(MedicalRecord newMedicalRecord : newMedicalRecordList) {
+				newMedicalRecord.setBirthdate(updatedMedicalRecord.getBirthdate());
+				newMedicalRecord.setMedications(updatedMedicalRecord.getMedications());
+				newMedicalRecord.setAllergies(updatedMedicalRecord.getAllergies());
+				updatedMedicalRecordList.add(newMedicalRecord);
+			}
+			
 
 			logger.info("traitement addMedicalRecord réussi chez MedicalRecordServiceImpl!");
-			return medicalRecordRepository.save(newMedicalRecord);
+			return medicalRecordRepository.saveAll(updatedMedicalRecordList);
 			
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
@@ -53,9 +61,9 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 	public void deleteMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
 		logger.debug("traitement deleteMedicalRecord en cours chez MedicalRecordServiceImpl");
 		try {
-			MedicalRecord medicalRecordToDelete = medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(firstName,
+			List<MedicalRecord> medicalRecordToDeleteList = medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(firstName,
 					lastName);
-			medicalRecordRepository.delete(medicalRecordToDelete);
+			medicalRecordRepository.deleteAll(medicalRecordToDeleteList);
 		
 			logger.info("traitement deleteMedicalRecord réussi chez MedicalRecordServiceImpl!");
 		} catch (Exception e) {

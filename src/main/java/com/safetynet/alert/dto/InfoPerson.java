@@ -6,9 +6,11 @@ import java.util.List;
 import com.safetynet.alert.model.Allergie;
 import com.safetynet.alert.model.Medication;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class InfoPerson {
 	
 	private String firstName;

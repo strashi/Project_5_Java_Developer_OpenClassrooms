@@ -40,11 +40,11 @@ public class FireStationController {
 	}
 
 	@PutMapping("/firestation")
-	public FireStation updateFireStation(@RequestParam String address, @RequestParam int station) {
+	public List<FireStation> updateFireStation(@RequestParam String address, @RequestParam List<Integer> stations) {
 		logger.debug("requête updateFireStation envoyée de FireStationController");
 		try {
 			logger.info("requête updateFireStation réussie chez FireStationController!");
-			return fireStationService.updateFireStation(address, station);
+			return fireStationService.updateFireStation(address, stations);
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;

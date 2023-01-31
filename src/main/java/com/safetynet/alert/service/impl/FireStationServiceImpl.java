@@ -1,5 +1,6 @@
 package com.safetynet.alert.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
@@ -58,13 +59,19 @@ public class FireStationServiceImpl implements FireStationService {
 		}
 	}
 
-	public FireStation updateFireStation(String address, int station) {
+	public List<FireStation> updateFireStation(String address, List<Integer> stationList) {
 		logger.debug("traitement updateFireStation en cours chez FireStationServiceImpl");
+		List<FireStation> updatedFireStationList = new ArrayList<>();
 		try {
-			FireStation newFireStation = fireStationRepository.getFireStationByAddress(address);
-			newFireStation.setStation(station);
+			List<FireStation> newFireStationList = fireStationRepository.getFireStationByAddress(address);
+			for(int i = 0; i < newFireStationList.size(); i++) {
+				FireStation fireStation = newFireStationList.get(i);
+				fireStation.setStation(stationList.get(i));
+				updatedFireStationList.add(fireStation);
+			}
+			
 			logger.info("traitement updateFireStation réussi chez FireStationServiceImpl!");
-			return fireStationRepository.save(newFireStation);
+			return fireStationRepository.saveAll(updatedFireStationList);
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -75,8 +82,8 @@ public class FireStationServiceImpl implements FireStationService {
 	public void deleteFireStationByAddress(String address) {
 		logger.debug("traitement deleteFireStation en cours chez FireStationServiceImpl");
 		try {
-			FireStation fireStationToDelete = fireStationRepository.getFireStationByAddress(address);
-			fireStationRepository.delete(fireStationToDelete);
+			List<FireStation> fireStationToDeleteList = fireStationRepository.getFireStationByAddress(address);
+			fireStationRepository.deleteAll(fireStationToDeleteList);
 			logger.info("traitement deleteFireStation réussi chez FireStationServiceImpl!");
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
@@ -148,7 +155,7 @@ public class FireStationServiceImpl implements FireStationService {
 				personWithMedicalRecordDTO.setAge(util.getAge(person));
 
 				List<MedicalRecord> medicalRecordsList = medicalRecordRepository
-						.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+						.findMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
 				for (MedicalRecord medicalRecord : medicalRecordsList) {
 					personWithMedicalRecordDTO.getMedications().addAll(medicalRecord.getMedications());
 					personWithMedicalRecordDTO.getAllergies().addAll(medicalRecord.getAllergies());
@@ -186,7 +193,7 @@ public class FireStationServiceImpl implements FireStationService {
 						personWithMedicalRecordDTO.setAge(util.getAge(person));
 
 						List<MedicalRecord> medicalRecordsList = medicalRecordRepository
-								.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+								.findMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
 						for (MedicalRecord medicalRecord : medicalRecordsList) {
 							personWithMedicalRecordDTO.getAllergies().addAll(medicalRecord.getAllergies());
 						}

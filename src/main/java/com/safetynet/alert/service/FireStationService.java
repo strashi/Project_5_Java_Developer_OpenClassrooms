@@ -10,7 +10,7 @@ import com.safetynet.alert.model.FireStation;
 public interface FireStationService {
 	public FireStation addFireStation(FireStation fireStation);
 	
-	public FireStation updateFireStation(String address, int station);
+	public List<FireStation> updateFireStation(String address, List<Integer> stations);
 
 	public void deleteFireStationByAddress(String address);
 

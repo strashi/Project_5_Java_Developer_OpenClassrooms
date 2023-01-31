@@ -1,5 +1,7 @@
 package com.safetynet.alert.service;
 
+import java.util.List;
+
 import com.safetynet.alert.dto.ResponseChildAlert;
 import com.safetynet.alert.dto.ResponsePersonInfo;
 import com.safetynet.alert.model.Person;
@@ -7,11 +9,11 @@ import com.safetynet.alert.model.Person;
 public interface PersonService {
 	public Person addPerson(Person person);
 
-	public Person updatePerson(Person oldPerson);
+	public List<Person> updatePerson(Person oldPerson);
 	
 	public void deletePersonByFirstNameAndLastName(String firstName, String lastName);
 	
-	public Iterable<String> listOfEmailByCity(String city);
+	public List<String> listOfEmailByCity(String city);
 	
 	public ResponseChildAlert childAlert(String address);
 	

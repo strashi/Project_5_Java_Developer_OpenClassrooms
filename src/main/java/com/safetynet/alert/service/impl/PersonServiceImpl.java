@@ -1,5 +1,6 @@
 package com.safetynet.alert.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.DynamicUpdate;
@@ -44,27 +45,38 @@ public class PersonServiceImpl implements PersonService {
 	public Person addPerson(Person person) {
 		logger.debug("traitement addPerson en cours chez PersonServiceImpl");
 		try {
+			Person response = personRepository.save(person);
 			logger.info("traitement addPerson réussi chez PersonServiceImpl!");
-			return personRepository.save(person);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
 		}
 	}
 
-	public Person updatePerson(Person oldPerson) {
-		logger.debug("traitement addPerson en cours chez PersonServiceImpl");
+	public List<Person> updatePerson(Person updatedPerson) {
+		logger.debug("traitement updatePerson en cours chez PersonServiceImpl");
 		try {
-			Person newPerson = personRepository.findPersonByFirstNameAndLastName(oldPerson.getFirstName(),
-					oldPerson.getLastName());
-			newPerson.setAddress(oldPerson.getAddress());
-			newPerson.setCity(oldPerson.getCity());
-			newPerson.setZip(oldPerson.getZip());
-			newPerson.setPhone(oldPerson.getPhone());
-			newPerson.setEmail(oldPerson.getEmail());
-
-			logger.info("traitement addPerson réussi chez PersonServiceImpl!");
-			return personRepository.save(newPerson);
+			List<Person> personList = personRepository.findPersonByFirstNameAndLastName(updatedPerson.getFirstName(),
+					updatedPerson.getLastName());
+			List<Person> newPersonList = new ArrayList<Person>();
+			for (Person newPerson : personList) {
+				newPerson.setAddress(updatedPerson.getAddress());
+				newPerson.setCity(updatedPerson.getCity());
+				newPerson.setZip(updatedPerson.getZip());
+				newPerson.setPhone(updatedPerson.getPhone());
+				newPerson.setEmail(updatedPerson.getEmail());
+				newPersonList.add(newPerson);
+			}
+			List<Person> response = new ArrayList<>();
+			
+			if(personRepository.saveAll(newPersonList) != null)
+				response = personRepository.saveAll(newPersonList);
+			else
+				response = newPersonList;
+						
+			logger.info("traitement updatePerson réussi chez PersonServiceImpl!");
+			return response;
 
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
@@ -77,9 +89,13 @@ public class PersonServiceImpl implements PersonService {
 		logger.debug("traitement deletePerson en cours chez PersonServiceImpl");
 		try {
 
-			Person personToDelete = personRepository.findPersonByFirstNameAndLastName(firstName, lastName);
+			List<Person> personToDeleteList = personRepository.findPersonByFirstNameAndLastName(firstName, lastName);
+			
+			for (Person person : personToDeleteList) {
+				personRepository.delete(person);
+			}
 			logger.info("traitement deletePerson réussi chez PersonServiceImpl!");
-			personRepository.delete(personToDelete);
+
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 
@@ -87,11 +103,13 @@ public class PersonServiceImpl implements PersonService {
 
 	}
 
-	public Iterable<String> listOfEmailByCity(String city) {
+	public List<String> listOfEmailByCity(String city) {
 		logger.debug("traitement list of email en cours chez PersonServiceImpl");
 		try {
+			List<String> response = new ArrayList<>();
+			response = personRepository.listOfEmailByCity(city);
 			logger.info("traitement list of email réussi chez PersonServiceImpl!");
-			return personRepository.listOfEmailByCity(city);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -131,8 +149,8 @@ public class PersonServiceImpl implements PersonService {
 			for (Person person : personList) {
 				InfoPerson infoPerson = modelMapper.map(person, InfoPerson.class);
 				infoPerson.setAge(util.getAge(person));
-				List<MedicalRecord> medicalRecordsList = medicalRecordRepository.findByFirstNameAndLastName(firstName,
-						lastName);
+				List<MedicalRecord> medicalRecordsList = medicalRecordRepository
+						.findMedicalRecordByFirstNameAndLastName(firstName, lastName);
 				for (MedicalRecord medicalRecord : medicalRecordsList) {
 					infoPerson.getMedications().addAll(medicalRecord.getMedications());
 					infoPerson.getAllergies().addAll(medicalRecord.getAllergies());

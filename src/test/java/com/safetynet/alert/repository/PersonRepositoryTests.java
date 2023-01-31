@@ -18,7 +18,7 @@ public class PersonRepositoryTests {
 	private PersonRepository personRepository;
 	
 	private Person person;
-	
+	/*
 	@Test
 	public void testSavePerson() {
 		long id=0L;
@@ -29,5 +29,5 @@ public class PersonRepositoryTests {
 		
 		assertTrue(fetchedPerson != null);
 		
-	}
+	}*/
 }

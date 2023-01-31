@@ -1,5 +1,7 @@
 package com.safetynet.alert.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,7 @@ public class PersonController {
 	}
 
 	@PutMapping("/person")
-	public Person updatePerson(@RequestBody Person person) {
+	public List<Person> updatePerson(@RequestBody Person person) {
 		logger.debug("requête updatePerson envoyée de PersonController");
 		try {
 			logger.info("requête updatePerson réussie chez PersonController!");
@@ -62,7 +64,7 @@ public class PersonController {
 	}
 
 	@GetMapping("/communityEmail")
-	public Iterable<String> listOfEmailByCity(@RequestParam String city) {
+	public List<String> listOfEmailByCity(@RequestParam String city) {
 		logger.debug("requête list of email envoyée de PersonController");
 		try {
 			logger.info("requête list of email réussie chez PersonController!");
