@@ -3,6 +3,8 @@ package com.safetynet.alert.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,8 +53,9 @@ public class FireStationServiceImpl implements FireStationService {
 	public FireStation addFireStation(FireStation fireStation) {
 		logger.debug("traitement addFireStation en cours chez FireStationServiceImpl");
 		try {
+			FireStation response = fireStationRepository.save(fireStation);
 			logger.info("traitement addFireStation réussi chez FireStationServiceImpl!");
-			return fireStationRepository.save(fireStation);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -63,41 +66,54 @@ public class FireStationServiceImpl implements FireStationService {
 		logger.debug("traitement updateFireStation en cours chez FireStationServiceImpl");
 		List<FireStation> updatedFireStationList = new ArrayList<>();
 		try {
-			List<FireStation> newFireStationList = fireStationRepository.getFireStationByAddress(address);
+			List<FireStation> newFireStationList = fireStationRepository.findByAddress(address);
 			for(int i = 0; i < newFireStationList.size(); i++) {
 				FireStation fireStation = newFireStationList.get(i);
 				fireStation.setStation(stationList.get(i));
 				updatedFireStationList.add(fireStation);
 			}
+			List<FireStation> response = new ArrayList<>();
+			
+			if(fireStationRepository.saveAll(updatedFireStationList) != null)
+				response = fireStationRepository.saveAll(updatedFireStationList);
+			else
+				response = updatedFireStationList;
 			
 			logger.info("traitement updateFireStation réussi chez FireStationServiceImpl!");
-			return fireStationRepository.saveAll(updatedFireStationList);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
 		}
 
 	}
-
-	public void deleteFireStationByAddress(String address) {
+	
+	public void deleteFireStation(FireStation firestation) {
 		logger.debug("traitement deleteFireStation en cours chez FireStationServiceImpl");
+		List<FireStation> fireStationToDeleteList = new ArrayList<>();
 		try {
-			List<FireStation> fireStationToDeleteList = fireStationRepository.getFireStationByAddress(address);
-			fireStationRepository.deleteAll(fireStationToDeleteList);
-			logger.info("traitement deleteFireStation réussi chez FireStationServiceImpl!");
-		} catch (Exception e) {
+		if(firestation.getAddress() != "string") {
+			fireStationToDeleteList = fireStationRepository.findByAddress(firestation.getAddress());
+		}
+		if(firestation.getStation() != 0) {
+			fireStationToDeleteList = fireStationRepository.findByStation(firestation.getStation());
+		}
+		fireStationRepository.deleteAll(fireStationToDeleteList);
+		logger.info("traitement deleteFireStation réussi chez FireStationServiceImpl!");
+		}catch (Exception e) {
 			logger.error("marche pas :(", e);
 
 		}
-
+		
 	}
-
+	
 	@Override
 	public List<String> phoneAlert(Integer station) {
 		logger.debug("traitement phoneAlert en cours chez FireStationServiceImpl");
 		try {
+			List<String> response = fireStationRepository.phoneAlert(station);
 			logger.info("traitement phoneAlert réussi chez FireStationServiceImpl!");
-			return fireStationRepository.phoneAlert(station);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -188,13 +204,13 @@ public class FireStationServiceImpl implements FireStationService {
 					address.setAddress(fireStation.getAddress());
 					List<Person> residentsList = personRepository.findByAddress(address.getAddress());
 					for (Person person : residentsList) {
-						PersonWithMedicalRecordDTO personWithMedicalRecordDTO = modelMapper.map(person,
-								PersonWithMedicalRecordDTO.class);
+						PersonWithMedicalRecordDTO personWithMedicalRecordDTO = modelMapper.map(person,PersonWithMedicalRecordDTO.class);
 						personWithMedicalRecordDTO.setAge(util.getAge(person));
 
 						List<MedicalRecord> medicalRecordsList = medicalRecordRepository
 								.findMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
 						for (MedicalRecord medicalRecord : medicalRecordsList) {
+							personWithMedicalRecordDTO.getMedications().addAll(medicalRecord.getMedications());
 							personWithMedicalRecordDTO.getAllergies().addAll(medicalRecord.getAllergies());
 						}
 						address.getListOfPersonsWithMedicalRecordDTO().add(personWithMedicalRecordDTO);
@@ -213,4 +229,8 @@ public class FireStationServiceImpl implements FireStationService {
 			return null;
 		}
 	}
+
+	
+
+	
 }

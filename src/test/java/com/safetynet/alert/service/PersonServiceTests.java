@@ -53,9 +53,9 @@ public class PersonServiceTests {
 	
 	@Test
 	public void testAddPerson() {
-		long id=0L;
-		Person person = new Person(id,"Jack","Black","Blv Av","Moscou",112233,"052156","mail@box.xyz");
-		Person falsePerson = new Person(id,"Jo","White","Blv Av","Moscou",112233,"052156","mail@box.xyz");
+	
+		Person person = new Person(0L,"Jack","Black","Blv Av","Moscou",112233,"052156","mail@box.xyz");
+		Person falsePerson = new Person(0L,"Jo","White","Blv Av","Moscou",112233,"052156","mail@box.xyz");
 
 		when(personRepository.save(person)).thenReturn(person);
 		
@@ -64,20 +64,19 @@ public class PersonServiceTests {
 		assertThat(savedPerson.equals(person));
 		assertFalse(savedPerson.equals(falsePerson));
 
-		
+		verify(personRepository, times(1)).save(person);
 	}
 	
 	@Test
 	public void testUpdatePerson() {
 		List<Person> personList = new ArrayList<>();
 			
-		long id=0L;
-		Person personTest = new Person(id,"Jack","Black","Blv Av","Moscou",112233,"052156","mail@box.xyz");
+		Person personTest = new Person(0L,"Jack","Black","Blv Av","Moscou",112233,"052156","mail@box.xyz");
 		String personTestAddress = personTest.getAddress();
 		String personTestCity = personTest.getCity();
 		personList.add(personTest);
 		
-		Person updatedPerson = new Person(id,"Jack","Black","rue","ville",112233,"052156","mail@box.xyz");
+		Person updatedPerson = new Person(0L,"Jack","Black","rue","ville",112233,"052156","mail@box.xyz");
 	
 				
 		when(personRepository.findPersonByFirstNameAndLastName(any(String.class), any(String.class))).thenReturn(personList);
@@ -202,4 +201,6 @@ public class PersonServiceTests {
 		verify(medicalRecordRepository, times(1)).findMedicalRecordByFirstNameAndLastName(firstName, lastName);
 
 	}
+	
+	
 }

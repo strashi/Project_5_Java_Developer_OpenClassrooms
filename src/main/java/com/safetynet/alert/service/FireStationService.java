@@ -12,7 +12,7 @@ public interface FireStationService {
 	
 	public List<FireStation> updateFireStation(String address, List<Integer> stations);
 
-	public void deleteFireStationByAddress(String address);
+//	public void deleteFireStationByAddress(String address);
 
 	public ResponsePersonByFireStation coveredPersonsByFireStationWithChildrenAdultCount(Integer station);
 
@@ -21,5 +21,9 @@ public interface FireStationService {
 	public ResponseFire fire(String address);
 	
 	public ResponseFlood flood(List<Integer> numbersOfStations);
+
+	//public void deleteFireStationByStation(int station);
+
+	public void deleteFireStation(FireStation firestation);
 
 }
