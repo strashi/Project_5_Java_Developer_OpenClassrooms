@@ -45,11 +45,7 @@ public class PersonControllerTests {
 	
 	@Test
 	public void testUpDatePerson() throws Exception {
-		/*long id=0L;
-		Person person = new Person(id,"Jack","Black","Blv Av","Moscou",112233,"052156","mail@box.xyz");
-		Person updatedperson = new Person(id,"Jack","Black","Ruelle","Mauleon",552251,"123","mail@box.xyz");
-		when(personService.updatePerson(updatedperson)).thenReturn(updatedperson);
-		*/
+	
 		Person updatedperson = new Person();
 
 		mockMvc.perform(put("/person").contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +64,6 @@ public class PersonControllerTests {
 	@Test
 	public void testlistOfEmailByCity() throws Exception {
 		String city ="city";
-		//String mail[] = new String[] {"mail","mail2","mail3"};
 		List<String> list = new ArrayList<>();
 		list.add("mail");
 		list.add("mail2");

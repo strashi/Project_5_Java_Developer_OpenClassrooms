@@ -26,8 +26,9 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 	public MedicalRecord addMedicalRecord(MedicalRecord medicalRecord) {
 		logger.debug("traitement addMedicalRecord en cours chez MedicalRecordServiceImpl");
 		try {
+			MedicalRecord response = medicalRecordRepository.save(medicalRecord);
 			logger.info("traitement addMedicalRecord réussi chez MedicalRecordServiceImpl!");
-			return medicalRecordRepository.save(medicalRecord);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -46,10 +47,14 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 				newMedicalRecord.setAllergies(updatedMedicalRecord.getAllergies());
 				updatedMedicalRecordList.add(newMedicalRecord);
 			}
-			
+			 List<MedicalRecord> response = new ArrayList<>();
+			 if(medicalRecordRepository.saveAll(updatedMedicalRecordList) != null)
+				 response = medicalRecordRepository.saveAll(updatedMedicalRecordList);
+			 else
+				 response = updatedMedicalRecordList;
 
 			logger.info("traitement addMedicalRecord réussi chez MedicalRecordServiceImpl!");
-			return medicalRecordRepository.saveAll(updatedMedicalRecordList);
+			return response;
 			
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);

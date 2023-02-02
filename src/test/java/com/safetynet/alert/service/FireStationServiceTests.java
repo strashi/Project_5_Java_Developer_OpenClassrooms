@@ -86,10 +86,11 @@ public class FireStationServiceTests {
 		List<Integer> newStations = new ArrayList<>();
 		newStations.add(6);
 		newStations.add(7);
-
+		
 		when(fireStationRepository.findByAddress(address)).thenReturn(listOfOldFireStations);
 		when(fireStationRepository.saveAll(any(List.class))).thenReturn(null);
-
+		
+	
 		List<FireStation> fireStationResponse = fireStationService.updateFireStation(address, newStations);
 
 		assertEquals(fireStationResponse.get(0).getStation(), 6);
@@ -340,9 +341,13 @@ public class FireStationServiceTests {
 		
 		assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0).getListOfPersonsWithMedicalRecordDTO().get(1).getMedications().size() == 0);
 		assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0).getListOfPersonsWithMedicalRecordDTO().get(1).getAllergies().size() == 0);
-		//assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0).getListOfPersonsWithMedicalRecordDTO().get(0).getMedications().size() == 2);
+		assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0).getListOfPersonsWithMedicalRecordDTO().get(0).getMedications().get(0).getMedication().toString() =="aznol 350mg" );
+	//	assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0).getListOfPersonsWithMedicalRecordDTO().get(0).getMedications().get(1));
+	//	assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0).getListOfPersonsWithMedicalRecordDTO().get(0).getMedications().size() == 2);
 		assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0).getListOfPersonsWithMedicalRecordDTO().get(0).getMedications().get(1).getMedication().toString() =="jus d'ail 3x par jour" );
- 
+		
+		verify(medicalRecordRepository, times(8)).findMedicalRecordByFirstNameAndLastName(any(String.class),
+				any(String.class));
 	}
 	
 }

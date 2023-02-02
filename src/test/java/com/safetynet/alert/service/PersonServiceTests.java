@@ -77,8 +77,7 @@ public class PersonServiceTests {
 		personList.add(personTest);
 		
 		Person updatedPerson = new Person(0L,"Jack","Black","rue","ville",112233,"052156","mail@box.xyz");
-	
-				
+		
 		when(personRepository.findPersonByFirstNameAndLastName(any(String.class), any(String.class))).thenReturn(personList);
 		when(personRepository.saveAll(any(List.class))).thenReturn(null);
 		

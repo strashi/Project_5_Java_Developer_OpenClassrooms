@@ -50,19 +50,7 @@ public class FireStationController {
 			return null;
 		}
 	}
-	/*
-	@DeleteMapping("/firestation")
-	public void deleteFireStationByAddress(@RequestParam String address) {
-		logger.debug("requête deleteFireStation envoyée de FireStationController");
-		try {
-			fireStationService.deleteFireStationByAddress(address);
-			logger.info("requête deleteFireStation réussie chez FireStationController!");
-		} catch (Exception e) {
-			logger.error("marche pas :(", e);
-		}
 		
-	}*/
-	
 	@DeleteMapping("/firestation")
 	public void deleteFireStation(@RequestBody FireStation firestation) {
 		logger.debug("requête deleteFireStation envoyée de FireStationController");
