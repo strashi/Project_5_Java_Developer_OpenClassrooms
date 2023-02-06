@@ -67,18 +67,18 @@ public class FireStationServiceImpl implements FireStationService {
 		List<FireStation> updatedFireStationList = new ArrayList<>();
 		try {
 			List<FireStation> newFireStationList = fireStationRepository.findByAddress(address);
-			for(int i = 0; i < newFireStationList.size(); i++) {
+			for (int i = 0; i < newFireStationList.size(); i++) {
 				FireStation fireStation = newFireStationList.get(i);
 				fireStation.setStation(stationList.get(i));
 				updatedFireStationList.add(fireStation);
 			}
 			List<FireStation> response = new ArrayList<>();
-			
-			if(fireStationRepository.saveAll(updatedFireStationList) != null)
+
+			if (fireStationRepository.saveAll(updatedFireStationList) != null)
 				response = fireStationRepository.saveAll(updatedFireStationList);
 			else
 				response = updatedFireStationList;
-			
+
 			logger.info("traitement updateFireStation réussi chez FireStationServiceImpl!");
 			return response;
 		} catch (Exception e) {
@@ -87,26 +87,26 @@ public class FireStationServiceImpl implements FireStationService {
 		}
 
 	}
-	
+
 	public void deleteFireStation(FireStation firestation) {
 		logger.debug("traitement deleteFireStation en cours chez FireStationServiceImpl");
 		List<FireStation> fireStationToDeleteList = new ArrayList<>();
 		try {
-		if(firestation.getAddress() != "string") {
-			fireStationToDeleteList = fireStationRepository.findByAddress(firestation.getAddress());
-		}
-		if(firestation.getStation() != 0) {
-			fireStationToDeleteList = fireStationRepository.findByStation(firestation.getStation());
-		}
-		fireStationRepository.deleteAll(fireStationToDeleteList);
-		logger.info("traitement deleteFireStation réussi chez FireStationServiceImpl!");
-		}catch (Exception e) {
+			if (firestation.getAddress() != "string") {
+				fireStationToDeleteList = fireStationRepository.findByAddress(firestation.getAddress());
+			}
+			if (firestation.getStation() != 0) {
+				fireStationToDeleteList = fireStationRepository.findByStation(firestation.getStation());
+			}
+			fireStationRepository.deleteAll(fireStationToDeleteList);
+			logger.info("traitement deleteFireStation réussi chez FireStationServiceImpl!");
+		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 
 		}
-		
+
 	}
-	
+
 	@Override
 	public List<String> phoneAlert(Integer station) {
 		logger.debug("traitement phoneAlert en cours chez FireStationServiceImpl");
@@ -204,7 +204,8 @@ public class FireStationServiceImpl implements FireStationService {
 					address.setAddress(fireStation.getAddress());
 					List<Person> residentsList = personRepository.findByAddress(address.getAddress());
 					for (Person person : residentsList) {
-						PersonWithMedicalRecordDTO personWithMedicalRecordDTO = modelMapper.map(person,PersonWithMedicalRecordDTO.class);
+						PersonWithMedicalRecordDTO personWithMedicalRecordDTO = modelMapper.map(person,
+								PersonWithMedicalRecordDTO.class);
 						personWithMedicalRecordDTO.setAge(util.getAge(person));
 
 						List<MedicalRecord> medicalRecordsList = medicalRecordRepository
@@ -230,7 +231,4 @@ public class FireStationServiceImpl implements FireStationService {
 		}
 	}
 
-	
-
-	
 }

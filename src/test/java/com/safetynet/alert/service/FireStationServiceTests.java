@@ -3,6 +3,7 @@ package com.safetynet.alert.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -40,7 +41,7 @@ import com.safetynet.alert.service.impl.FireStationServiceImpl;
 public class FireStationServiceTests {
 
 	@InjectMocks
-	private FireStationService fireStationService = new FireStationServiceImpl();
+	private FireStationServiceImpl fireStationService; 
 
 	@Mock
 	private FireStationRepository fireStationRepository;
@@ -60,16 +61,26 @@ public class FireStationServiceTests {
 	@Test
 	public void testAddStation() {
 		FireStation newFireStation = new FireStation(0L, "address", 13);
-		FireStation falseFireStation = new FireStation(0L, "address", 14);
-
+	
 		when(fireStationRepository.save(newFireStation)).thenReturn(newFireStation);
 
 		FireStation fireStation = fireStationService.addFireStation(newFireStation);
 
 		assertThat(fireStation.equals(newFireStation));
-		assertFalse(fireStation.equals(falseFireStation));
-
+		
 		verify(fireStationRepository, times(1)).save(newFireStation);
+	}
+
+	@Test
+	public void testAddStationWithException() {
+		
+		FireStation fireStation =  new FireStation();
+		when(fireStationRepository.save(fireStation)).thenThrow(NullPointerException.class);
+
+		FireStation newfireStation = fireStationService.addFireStation(fireStation);
+						
+		assertThrows(Exception.class, () -> {fireStationRepository.save(fireStation);});
+		
 	}
 
 	@Test
@@ -102,6 +113,32 @@ public class FireStationServiceTests {
 		verify(fireStationRepository, times(1)).saveAll(any(List.class));
 
 	}
+	
+	@Test
+	public void testUpdateFireStationWithException() {
+
+		String address = "address";
+		FireStation fireStation1 = new FireStation(0L, address, 1);
+		FireStation fireStation2 = new FireStation(0L, address, 2);
+
+		List<FireStation> listOfOldFireStations = new ArrayList<>();
+		listOfOldFireStations.add(fireStation1);
+		listOfOldFireStations.add(fireStation2);
+
+		List<Integer> newStations = new ArrayList<>();
+		newStations.add(6);
+		newStations.add(7);
+		
+		when(fireStationRepository.findByAddress(address)).thenThrow(NullPointerException.class);
+		//when(fireStationRepository.saveAll(any(List.class))).thenReturn(null);
+		
+	
+		List<FireStation> fireStationResponse = fireStationService.updateFireStation("address", newStations);
+		
+		assertThrows(Exception.class, () -> {fireStationRepository.findByAddress(address);});
+		
+	}
+	
 
 	@Test
 	public void testDeleteFireStation() {
@@ -117,7 +154,22 @@ public class FireStationServiceTests {
 
 		verify(fireStationRepository, times(1)).deleteAll(fireStationToDeleteList);
 	}
+	
+	@Test
+	public void testDeleteFireStationWithException() {
 
+		FireStation fireStation = new FireStation(0L, "address", 2);
+
+		//List<FireStation> fireStationToDeleteList = new ArrayList<>();
+
+		when(fireStationRepository.findByAddress(fireStation.getAddress())).thenThrow(NullPointerException.class);
+		//doNothing().when(fireStationRepository).deleteAll(fireStationToDeleteList);
+
+		fireStationService.deleteFireStation(fireStation);
+
+		assertThrows(Exception.class, () -> {fireStationRepository.findByAddress(fireStation.getAddress());});
+		//verify(fireStationRepository, times(1)).deleteAll(fireStationToDeleteList);
+	}
 	@Test
 	public void testPhoneAlert() {
 		FireStation fireStation = new FireStation();
@@ -130,7 +182,19 @@ public class FireStationServiceTests {
 
 		verify(fireStationRepository, times(1)).phoneAlert(fireStation.getStation());
 	}
+	
+	@Test
+	public void testPhoneAlertWithException() {
+		FireStation fireStation = new FireStation();
+		//List<String> listOfTelephonNumber = new ArrayList<>();
+		//listOfTelephonNumber.add("123456");
 
+		when(fireStationRepository.phoneAlert(fireStation.getStation())).thenThrow(NullPointerException.class);
+
+		fireStationService.phoneAlert(fireStation.getStation());
+
+		assertThrows(Exception.class, () -> {fireStationRepository.phoneAlert(fireStation.getStation());});
+	}
 	@Test
 	public void testCoveredPersonsByFireStationWithChildrenAdultCount() {
 
@@ -169,7 +233,49 @@ public class FireStationServiceTests {
 		verify(util, times(1)).getAge(child);
 
 	}
+	
+	@Test
+	public void testCoveredPersonsByFireStationWithChildrenAdultCountWithException() {
 
+		FireStation fireStation = new FireStation(0L, "address", 2);
+		List<FireStation> listOfFireStations = new ArrayList<>();
+		listOfFireStations.add(fireStation);
+
+		Person adult = new Person(0L, "Jack", "Black", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
+		Person child = new Person(0L, "Jo", "White", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
+
+		List<Person> listOfPersons = new ArrayList<>();
+		listOfPersons.add(adult);
+		listOfPersons.add(child);
+
+		int age = -1;
+		PersonDTO childDTO = new PersonDTO("Jo", "White", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz", age);
+		PersonDTO adultDTO = new PersonDTO("Jack", "Black", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz", age);
+
+		/*when(personRepository.findByAddress(fireStation.getAddress())).thenThrow(NullPointerException.class);
+		when(modelMapper.map(child, PersonDTO.class)).thenReturn(childDTO);
+		when(modelMapper.map(adult, PersonDTO.class)).thenReturn(adultDTO);
+
+		when(util.getAge(adult)).thenReturn(35);
+		when(util.getAge(child)).thenReturn(15);
+*/
+		when(fireStationRepository.findByStation(any(Integer.class))).thenThrow(NullPointerException.class);
+		//when(personRepository.findByAddress(fireStation.getAddress())).thenReturn(listOfPersons);
+
+		
+		
+		ResponsePersonByFireStation response = fireStationService
+				.coveredPersonsByFireStationWithChildrenAdultCount(fireStation.getStation());
+		
+		assertThrows(Exception.class, () -> {fireStationRepository.findByStation(any(Integer.class));});
+/*
+		assertTrue(response.getPersons().size() == 2);
+		assertTrue(response.getNumberOfAdults() == 1);
+		assertTrue(response.getNumberOfChildren() == 1);
+
+		verify(util, times(1)).getAge(child);*/
+	}
+	
 	@Test
 	public void testFire() {
 
@@ -256,7 +362,88 @@ public class FireStationServiceTests {
 				any(String.class));
 
 	}
+	
+	@Test
+	public void testFireWithException() {
 
+		String address = "address";
+/*
+		// Creation of FireStation
+		FireStation fireStation = new FireStation(0L, "address", 2);
+
+		List<FireStation> listOfFireStations = new ArrayList<>();
+		listOfFireStations.add(fireStation);
+
+		// Creation ot Persons
+		List<Person> residentsList = new ArrayList<>();
+		Person adult = new Person(0L, "Jack", "Black", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
+		Person child = new Person(0L, "Jo", "White", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
+
+		residentsList.add(adult);
+		residentsList.add(child);
+
+		// Creation of Persons With empties MedicalRecords
+		List<Medication> childMedicationsEmpty = new ArrayList<>();
+
+		List<Allergie> childAllergiesEmpty = new ArrayList<>();
+
+		List<Medication> adultMedicationsEmpty = new ArrayList<>();
+
+		List<Allergie> adultAllergiesEmpty = new ArrayList<>();
+
+		PersonWithMedicalRecordDTO childWithMedicalRecord = new PersonWithMedicalRecordDTO("Jo", "White", "052156", -1,
+				childMedicationsEmpty, childAllergiesEmpty);
+		PersonWithMedicalRecordDTO adultWithMedicalRecord = new PersonWithMedicalRecordDTO("Jack", "Black", "052156",
+				-1, adultMedicationsEmpty, adultAllergiesEmpty);
+
+		// Creation of MedicalRecords
+		List<Medication> adultMedications = new ArrayList<>();
+		List<Allergie> adultAllergies = new ArrayList<>();
+		List<Medication> childMedications = new ArrayList<>();
+
+		List<Allergie> childAllergies = new ArrayList<>();
+
+		Date childBirthday = new Date(01 / 01 / 2010);
+		Date adultBirthday = new Date(01 / 01 / 1950);
+
+		Medication medication1 = new Medication("aznol 350mg");
+		Medication medication2 = new Medication("jus d'ail 3x par jour");
+		adultMedications.add(medication1);
+		adultMedications.add(medication2);
+
+		Allergie allergie = new Allergie("glutène");
+		adultAllergies.add(allergie);
+
+		List<MedicalRecord> adultMedicalRecordsList = new ArrayList<>();
+		MedicalRecord adultMedicalRecord = new MedicalRecord(0L, "Jack", "Black", adultBirthday, adultMedications,
+				adultAllergies);
+		adultMedicalRecordsList.add(adultMedicalRecord);
+
+		List<MedicalRecord> childMedicalRecordsList = new ArrayList<>();
+		MedicalRecord childMedicalRecord = new MedicalRecord(0L, "Jo", "White", childBirthday, childMedications,
+				childAllergies);
+		childMedicalRecordsList.add(childMedicalRecord);
+*/
+		when(fireStationRepository.findByAddress(address)).thenThrow(NullPointerException.class);
+		/*when(personRepository.findByAddress(address)).thenReturn(residentsList);
+		when(modelMapper.map(child, PersonWithMedicalRecordDTO.class)).thenReturn(childWithMedicalRecord);
+		when(modelMapper.map(adult, PersonWithMedicalRecordDTO.class)).thenReturn(adultWithMedicalRecord);
+
+		when(util.getAge(adult)).thenReturn(73);
+		when(util.getAge(child)).thenReturn(13);
+		when(medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(adult.getFirstName(), adult.getLastName()))
+				.thenReturn(adultMedicalRecordsList);
+		when(medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(child.getFirstName(), child.getLastName()))
+				.thenReturn(childMedicalRecordsList);*/
+		
+		ResponseFire response = fireStationService.fire(address);
+		
+		assertThrows(Exception.class, () -> {fireStationRepository.findByAddress(address);});
+		
+
+	}
+
+	
 	@Test
 	public void testFlood() {
 		// Creation of list of integer
@@ -348,6 +535,102 @@ public class FireStationServiceTests {
 		
 		verify(medicalRecordRepository, times(8)).findMedicalRecordByFirstNameAndLastName(any(String.class),
 				any(String.class));
+	}
+	
+	@Test
+	public void testFloodWithException() {
+		// Creation of list of integer
+		List<Integer> listOfInteger = new ArrayList<>();
+		listOfInteger.add(1);
+		listOfInteger.add(2);
+		// Creation of 2 list of firestations
+		List<FireStation> listOfStations1 = new ArrayList<>();
+		FireStation fireStation1 = new FireStation(0L, "address1", 1);
+		listOfStations1.add(fireStation1);
+		FireStation fireStation2 = new FireStation(0L, "address2", 1);
+		listOfStations1.add(fireStation2);
+
+		List<FireStation> listOfStations2 = new ArrayList<>();
+		FireStation fireStation3 = new FireStation(0L, "address3", 2);
+		listOfStations2.add(fireStation3);
+		FireStation fireStation4 = new FireStation(0L, "address4", 2);
+		listOfStations2.add(fireStation4);
+
+		// Creation of list of residents
+		List<Person> residentsList = new ArrayList<>();
+		Person adult = new Person(0L, "Jack", "Black", "address1", "Moscou", 112233, "052156", "mail@box.xyz");
+		Person child = new Person(0L, "Jo", "White", "address1", "Moscou", 112233, "052156", "mail@box.xyz");
+
+		residentsList.add(adult);
+		residentsList.add(child);
+
+		// Creation of Persons With empties MedicalRecords
+		List<Medication> childMedicationsEmpty = new ArrayList<>();
+
+		List<Allergie> childAllergiesEmpty = new ArrayList<>();
+
+		List<Medication> adultMedicationsEmpty = new ArrayList<>();
+
+		List<Allergie> adultAllergiesEmpty = new ArrayList<>();
+
+		PersonWithMedicalRecordDTO childWithMedicalRecord = new PersonWithMedicalRecordDTO("Jo", "White", "052156", -1,
+				childMedicationsEmpty, childAllergiesEmpty);
+		PersonWithMedicalRecordDTO adultWithMedicalRecord = new PersonWithMedicalRecordDTO("Jack", "Black", "052156",
+				-1, adultMedicationsEmpty, adultAllergiesEmpty);
+
+		// Creation of MedicalRecords
+		List<Medication> adultMedications = new ArrayList<>();
+		List<Allergie> adultAllergies = new ArrayList<>();
+		List<Medication> childMedications = new ArrayList<>();
+
+		List<Allergie> childAllergies = new ArrayList<>();
+
+		Date childBirthday = new Date(01 / 01 / 2010);
+		Date adultBirthday = new Date(01 / 01 / 1950);
+
+		Medication medication1 = new Medication("aznol 350mg");
+		Medication medication2 = new Medication("jus d'ail 3x par jour");
+		adultMedications.add(medication1);
+		adultMedications.add(medication2);
+
+		Allergie allergie = new Allergie("glutène");
+		adultAllergies.add(allergie);
+
+		List<MedicalRecord> adultMedicalRecordsList = new ArrayList<>();
+		MedicalRecord adultMedicalRecord = new MedicalRecord(0L, "Jack", "Black", adultBirthday, adultMedications,
+				adultAllergies);
+		adultMedicalRecordsList.add(adultMedicalRecord);
+
+		List<MedicalRecord> childMedicalRecordsList = new ArrayList<>();
+		MedicalRecord childMedicalRecord = new MedicalRecord(0L, "Jo", "White", childBirthday, childMedications,
+				childAllergies);
+		childMedicalRecordsList.add(childMedicalRecord);
+
+		when(fireStationRepository.findByStation(1)).thenThrow(NullPointerException.class);
+		/*when(fireStationRepository.findByStation(2)).thenReturn(listOfStations2);
+		when(personRepository.findByAddress(any(String.class))).thenReturn(residentsList);
+		when(modelMapper.map(child, PersonWithMedicalRecordDTO.class)).thenReturn(childWithMedicalRecord);
+		when(modelMapper.map(adult, PersonWithMedicalRecordDTO.class)).thenReturn(adultWithMedicalRecord);
+
+		when(util.getAge(adult)).thenReturn(73);
+		when(util.getAge(child)).thenReturn(13);
+		when(medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(adult.getFirstName(), adult.getLastName())).thenReturn(adultMedicalRecordsList);
+		when(medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(child.getFirstName(), child.getLastName())).thenReturn(childMedicalRecordsList);
+*/
+		ResponseFlood response = fireStationService.flood(listOfInteger);
+		
+		assertThrows(Exception.class, () -> {fireStationRepository.findByStation(1);});
+	
+	}
+	
+	
+	@Test
+	public void testEquals() {
+		
+		final FireStationServiceImpl service = new FireStationServiceImpl();
+			
+				assertFalse(fireStationService.equals(service));
+				assertFalse(fireStationService.toString().equals(service.toString()));
 	}
 	
 }

@@ -28,8 +28,9 @@ public class MedicalRecordController {
 	public MedicalRecord addMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
 		logger.debug("requête addMedicalRecord envoyée de MedicalRecordController");
 		try {
+			MedicalRecord response = medicalRecordService.addMedicalRecord(medicalRecord);
 			logger.info("requête addMedicalRecord réussie chez MedicalRecordController!");
-			return medicalRecordService.addMedicalRecord(medicalRecord);
+			return response;
 		}catch(Exception e) {
 			logger.error("marche pas :(",e);
 			return null;
@@ -40,8 +41,9 @@ public class MedicalRecordController {
 	public List<MedicalRecord> updateMedicalRecord(@RequestBody MedicalRecord medicalRecord) {
 		logger.debug("requête updateMedicalRecord envoyée de MedicalRecordController");
 		try {
+			List<MedicalRecord> response = medicalRecordService.updateMedicalRecord(medicalRecord);
 			logger.info("requête updateMedicalRecord réussie chez MedicalRecordController!");
-			return medicalRecordService.updateMedicalRecord(medicalRecord);
+			return response;
 		}catch(Exception e) {
 			logger.error("marche pas :(",e);
 			return null;

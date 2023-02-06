@@ -74,10 +74,14 @@ public class PersonControllerTests {
 	
 	@Test
 	public void testChildAlert() throws Exception {
-		ResponseChildAlert response = new ResponseChildAlert();
-		String address = "address";
-		when(personService.childAlert(address)).thenReturn(response);
 		
-		mockMvc.perform(get("/childAlert").param(address, address)).andExpect(status().isOk()).andDo(print());
+		mockMvc.perform(get("/childAlert").param("address", "address")).andExpect(status().isOk()).andDo(print());
+	}
+	
+	@Test
+	public void testPersonInfo() throws Exception {
+		
+		
+		mockMvc.perform(get("/personInfo").param("firstName","firstName").param("lastName", "lastName")).andExpect(status().isOk()).andDo(print());
 	}
 }
