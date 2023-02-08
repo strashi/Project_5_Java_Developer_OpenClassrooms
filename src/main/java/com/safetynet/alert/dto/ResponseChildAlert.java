@@ -7,6 +7,8 @@ import lombok.Data;
 
 @Data
 public class ResponseChildAlert {
+
 	private List<PersonDTO> childrenList = new ArrayList<>();
+	
 	private List<PersonDTO> adultList = new ArrayList<>();
 }

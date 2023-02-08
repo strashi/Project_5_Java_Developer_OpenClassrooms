@@ -24,31 +24,32 @@ public class MedicalRecordControllerTests {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@MockBean
 	private MedicalRecordService MedicalRecordService;
-	
+
 	@Test
 	public void testAddMedicalRecord() throws Exception {
-		
+
 		MedicalRecord medicalRecord = new MedicalRecord();
-		
+
 		mockMvc.perform(post("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(medicalRecord))).andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	@Test
 	public void testUpdateMedicalRecord() throws Exception {
-		
+
 		MedicalRecord medicalRecord = new MedicalRecord();
-		
+
 		mockMvc.perform(put("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(medicalRecord))).andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	@Test
 	public void testDeleteMedicalRecord() throws Exception {
-		
-		mockMvc.perform(delete("/medicalRecord").param("firstName","firstName").param("lastName","lastName")).andExpect(status().isOk()).andDo(print());
+
+		mockMvc.perform(delete("/medicalRecord").param("firstName", "firstName").param("lastName", "lastName"))
+				.andExpect(status().isOk()).andDo(print());
 	}
 }

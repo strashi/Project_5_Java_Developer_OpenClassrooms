@@ -11,8 +11,6 @@ import com.safetynet.alert.model.FireStation;
 
 public interface FireStationRepository extends JpaRepository<FireStation, Long>{
 	
-	//public List<FireStation> getFireStationByAddress(String address);
-	
 	@Query(value="SELECT p.phone "
 			+ "FROM persons p "
 			+ "JOIN firestations f "
@@ -24,7 +22,5 @@ public interface FireStationRepository extends JpaRepository<FireStation, Long>{
 
 	public List<FireStation> findByAddress(String address);
 
-	//public List<FireStation> getFireStationByStation(int station);
-	
 }
 

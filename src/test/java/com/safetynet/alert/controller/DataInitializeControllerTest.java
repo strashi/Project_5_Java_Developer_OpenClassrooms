@@ -14,13 +14,13 @@ import com.safetynet.alert.service.DataInitializeService;
 
 @WebMvcTest(controllers = DataInitializeController.class)
 public class DataInitializeControllerTest {
-	
+
 	@Autowired
 	private MockMvc mockMvc;
 
 	@MockBean
 	private DataInitializeService dataInitializeService;
-	
+
 	@Test
 	public void testLoadData() throws Exception {
 		mockMvc.perform(post("/manageData")).andExpect(status().isOk()).andDo(print());

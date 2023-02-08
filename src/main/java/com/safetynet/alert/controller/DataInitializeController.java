@@ -11,21 +11,21 @@ import com.safetynet.alert.service.DataInitializeService;
 @RestController
 public class DataInitializeController {
 
-	private static final Logger logger =  LoggerFactory.getLogger(DataInitializeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(DataInitializeController.class);
 
 	@Autowired
 	private DataInitializeService dataInitializeService;
-	
+
 	@PostMapping("/manageData")
 	public void loadData() {
 		logger.debug("requête loadData envoyée de PersonController");
 		try {
 			logger.info("requête loadData réussie chez PersonController!");
 			dataInitializeService.readJsonFile();
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
-			
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+
 		}
 	}
-	
+
 }

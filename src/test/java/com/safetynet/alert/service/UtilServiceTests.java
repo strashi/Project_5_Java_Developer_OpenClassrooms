@@ -27,7 +27,7 @@ import com.safetynet.alert.service.impl.UtilServiceImpl;
 public class UtilServiceTests {
 
 	@InjectMocks
-	private UtilService util = new UtilServiceImpl();
+	private UtilServiceImpl util; // = new UtilServiceImpl();
 
 	@Mock
 	private MedicalRecordRepository medicalRecordRepository;

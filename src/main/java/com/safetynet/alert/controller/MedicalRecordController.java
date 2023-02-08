@@ -17,9 +17,8 @@ import com.safetynet.alert.service.MedicalRecordService;
 
 @RestController
 public class MedicalRecordController {
-	
-	private static final Logger logger =  LoggerFactory.getLogger(MedicalRecordController.class);
 
+	private static final Logger logger = LoggerFactory.getLogger(MedicalRecordController.class);
 
 	@Autowired
 	private MedicalRecordService medicalRecordService;
@@ -31,8 +30,8 @@ public class MedicalRecordController {
 			MedicalRecord response = medicalRecordService.addMedicalRecord(medicalRecord);
 			logger.info("requête addMedicalRecord réussie chez MedicalRecordController!");
 			return response;
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
 			return null;
 		}
 	}
@@ -44,8 +43,8 @@ public class MedicalRecordController {
 			List<MedicalRecord> response = medicalRecordService.updateMedicalRecord(medicalRecord);
 			logger.info("requête updateMedicalRecord réussie chez MedicalRecordController!");
 			return response;
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
 			return null;
 		}
 	}
@@ -56,8 +55,8 @@ public class MedicalRecordController {
 		try {
 			logger.info("requête deleteMedicalRecord réussie chez MedicalRecordController!");
 			medicalRecordService.deleteMedicalRecordByFirstNameAndLastName(firstName, lastName);
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
 		}
 	}
 

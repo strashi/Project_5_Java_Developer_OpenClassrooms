@@ -50,7 +50,7 @@ public class FireStationController {
 			return null;
 		}
 	}
-		
+
 	@DeleteMapping("/firestation")
 	public void deleteFireStation(@RequestBody FireStation firestation) {
 		logger.debug("requête deleteFireStation envoyée de FireStationController");
@@ -60,9 +60,8 @@ public class FireStationController {
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 		}
-		
+
 	}
-	
 
 	@GetMapping("/firestation")
 	public ResponsePersonByFireStation coveredPersonsByFireStationWithChildrenAdultCount(

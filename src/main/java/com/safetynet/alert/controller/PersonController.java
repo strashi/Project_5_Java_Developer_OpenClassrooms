@@ -20,8 +20,8 @@ import com.safetynet.alert.service.PersonService;
 
 @RestController
 public class PersonController {
-	
-	private static final Logger logger =  LoggerFactory.getLogger(PersonController.class);
+
+	private static final Logger logger = LoggerFactory.getLogger(PersonController.class);
 
 	@Autowired
 	private PersonService personService;
@@ -30,13 +30,17 @@ public class PersonController {
 	public Person addPerson(@RequestBody Person person) {
 		logger.debug("requête ajouter une personne envoyée de PersonController");
 		try {
+			Person response = personService.addPerson(person);
+
 			logger.info("requête ajouter une personne réussie chez PersonController!");
-			return personService.addPerson(person);
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
+			return response;
+
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+
 			return null;
 		}
-		
+
 	}
 
 	@PutMapping("/person")
@@ -45,8 +49,8 @@ public class PersonController {
 		try {
 			logger.info("requête updatePerson réussie chez PersonController!");
 			return personService.updatePerson(person);
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
 			return null;
 		}
 	}
@@ -57,9 +61,9 @@ public class PersonController {
 		try {
 			logger.info("requête deletePerson réussie chez PersonController!");
 			personService.deletePersonByFirstNameAndLastName(firstName, lastName);
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
-			
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+
 		}
 	}
 
@@ -69,8 +73,8 @@ public class PersonController {
 		try {
 			logger.info("requête list of email réussie chez PersonController!");
 			return personService.listOfEmailByCity(city);
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
 			return null;
 		}
 	}
@@ -81,11 +85,11 @@ public class PersonController {
 		try {
 			logger.info("requête childAlert réussie chez PersonController!");
 			return personService.childAlert(address);
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
 			return null;
 		}
-		
+
 	}
 
 	@GetMapping("/personInfo")
@@ -94,8 +98,8 @@ public class PersonController {
 		try {
 			logger.info("requête personInfo réussie chez PersonController!");
 			return personService.personInfo(firstName, lastName);
-		}catch(Exception e) {
-			logger.error("marche pas :(",e);
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
 			return null;
 		}
 	}

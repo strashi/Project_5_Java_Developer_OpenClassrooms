@@ -69,12 +69,12 @@ public class PersonServiceImpl implements PersonService {
 				newPersonList.add(newPerson);
 			}
 			List<Person> response = new ArrayList<>();
-			
-			if(personRepository.saveAll(newPersonList) != null)
+
+			if (personRepository.saveAll(newPersonList) != null)
 				response = personRepository.saveAll(newPersonList);
 			else
 				response = newPersonList;
-						
+
 			logger.info("traitement updatePerson réussi chez PersonServiceImpl!");
 			return response;
 
@@ -90,7 +90,7 @@ public class PersonServiceImpl implements PersonService {
 		try {
 
 			List<Person> personToDeleteList = personRepository.findPersonByFirstNameAndLastName(firstName, lastName);
-			
+
 			for (Person person : personToDeleteList) {
 				personRepository.delete(person);
 			}

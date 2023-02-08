@@ -29,67 +29,63 @@ public class FireStationControllerTests {
 
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@MockBean
 	private FireStationService fireStationService;
-	
+
 	@Test
 	public void testAddFireStation() throws Exception {
 		FireStation fireStation = new FireStation();
-		
+
 		mockMvc.perform(post("/firestation").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(fireStation))).andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	@Test
 	public void testDeleteFireStaion() throws Exception {
-				
+
 		FireStation fireStation = new FireStation();
-		
+
 		mockMvc.perform(delete("/firestation").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(fireStation))).andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	@Test
 	public void testUpDateFireStation() throws Exception {
-		
-		//FireStation updatedFireStation = new FireStation();
-		//String address = "address";
+
 		List<Integer> stations = new ArrayList<>();
 		stations.add(1);
 		stations.add(2);
-		String numberString = stations.stream().map(String::valueOf)
-			    .collect(Collectors.joining(","));
+		String numberString = stations.stream().map(String::valueOf).collect(Collectors.joining(","));
 
-		mockMvc.perform(put("/firestation").param("address","address").param("stations",numberString)).andExpect(status().isOk()).andDo(print());
-	}
-	
-	@Test
-	public void testCoveredPersonsByFireStationWithChildrenAdultCount() throws Exception{
-		mockMvc.perform(get("/firestation").param("stationNumber","1")).andExpect(status().isOk()).andDo(print());
+		mockMvc.perform(put("/firestation").param("address", "address").param("stations", numberString))
+				.andExpect(status().isOk()).andDo(print());
 	}
 
 	@Test
-	public void phoneAlert() throws Exception{
-		mockMvc.perform(get("/phoneAlert").param("firestation","1")).andExpect(status().isOk()).andDo(print());
+	public void testCoveredPersonsByFireStationWithChildrenAdultCount() throws Exception {
+		mockMvc.perform(get("/firestation").param("stationNumber", "1")).andExpect(status().isOk()).andDo(print());
 	}
-	
+
 	@Test
-	public void fire() throws Exception{
-		mockMvc.perform(get("/fire").param("address","address")).andExpect(status().isOk()).andDo(print());
+	public void phoneAlert() throws Exception {
+		mockMvc.perform(get("/phoneAlert").param("firestation", "1")).andExpect(status().isOk()).andDo(print());
 	}
-	
+
+	@Test
+	public void fire() throws Exception {
+		mockMvc.perform(get("/fire").param("address", "address")).andExpect(status().isOk()).andDo(print());
+	}
+
 	@Test
 	public void flood() throws Exception {
-		
-		//FireStation updatedFireStation = new FireStation();
-		//String address = "address";
+
 		List<Integer> stations = new ArrayList<>();
 		stations.add(1);
 		stations.add(3);
-		String numberString = stations.stream().map(String::valueOf)
-			    .collect(Collectors.joining(","));
+		String numberString = stations.stream().map(String::valueOf).collect(Collectors.joining(","));
 
-		mockMvc.perform(get("/flood").param("list_of_station_number",numberString)).andExpect(status().isOk()).andDo(print());
+		mockMvc.perform(get("/flood").param("list_of_station_number", numberString)).andExpect(status().isOk())
+				.andDo(print());
 	}
 }

@@ -7,6 +7,7 @@ import com.safetynet.alert.dto.ResponsePersonInfo;
 import com.safetynet.alert.model.Person;
 
 public interface PersonService {
+	
 	public Person addPerson(Person person);
 
 	public List<Person> updatePerson(Person oldPerson);

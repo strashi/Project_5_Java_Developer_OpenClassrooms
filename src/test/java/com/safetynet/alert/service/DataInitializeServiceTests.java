@@ -21,7 +21,7 @@ import com.safetynet.alert.service.impl.DataInitializeServiceImpl;
 public class DataInitializeServiceTests {
 	
 	@InjectMocks
-	private DataInitializeService dataInitializeService = new DataInitializeServiceImpl();
+	private DataInitializeServiceImpl dataInitializeService;
 	
 	@Mock
 	private MedicalRecordRepository medicalRecordRepository;
@@ -33,15 +33,11 @@ public class DataInitializeServiceTests {
 	
 	@Test
 	public void testReadJsonFile() {
-		
-		
-	
-	
+			
 		when(personRepository.saveAll(any(Iterable.class))).thenReturn(null);
 		when(fireStationRepository.saveAll(any(Iterable.class))).thenReturn(null);
 		when(medicalRecordRepository.saveAll(any(Iterable.class))).thenReturn(null);
-		
-		
+				
 		dataInitializeService.readJsonFile();
 		
 		verify(personRepository, times(1)).saveAll(any(Iterable.class));
