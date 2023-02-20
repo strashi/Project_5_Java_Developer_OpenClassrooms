@@ -487,6 +487,7 @@ public class FireStationServiceTests {
 	@Test
 	public void testFloodWithException() {
 		List<Integer> listOfInteger = new ArrayList<>();
+		listOfInteger.add(1);
 
 		when(fireStationRepository.findByStation(1)).thenThrow(NullPointerException.class);
 
