@@ -1,11 +1,15 @@
 package com.safetynet.alert.service;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,7 +35,13 @@ public class UtilServiceTests {
 
 	@Mock
 	private MedicalRecordRepository medicalRecordRepository;
-
+	
+	@Mock
+	private Date birthdate;
+	
+	@Mock
+	private MedicalRecord medicalRecord;
+	
 	@Test
 	public void testGetAge() {
 		Person person = new Person(0L, "Jack", "Black", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
@@ -61,13 +71,82 @@ public class UtilServiceTests {
 				adultAllergies);
 		adultMedicalRecordsList.add(adultMedicalRecord);
 
-		when(medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(person.getFirstName(),
+		when(medicalRecordRepository.findByFirstNameAndLastName(person.getFirstName(),
 				person.getLastName())).thenReturn(adultMedicalRecordsList);
 
 		int result = util.getAge(person);
 
 		assertTrue(result == 73);
 		assertFalse(result == 20);
+
+	}
+	
+	@Test
+	public void testGetAgeWithoutBirthdate() {
+		Person person = new Person(0L, "Jack", "Black", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
+
+		// Creation of MedicalRecord
+		List<Medication> adultMedications = new ArrayList<>();
+		List<Allergie> adultAllergies = new ArrayList<>();
+
+		Date adultBirthday = null;
+	
+		Medication medication1 = new Medication("aznol 350mg");
+		Medication medication2 = new Medication("jus d'ail 3x par jour");
+		adultMedications.add(medication1);
+		adultMedications.add(medication2);
+
+		Allergie allergie = new Allergie("glutène");
+		adultAllergies.add(allergie);
+
+		List<MedicalRecord> adultMedicalRecordsList = new ArrayList<>();
+		MedicalRecord adultMedicalRecord = new MedicalRecord(0L, "Jack", "Black", adultBirthday, adultMedications,
+				adultAllergies);
+		adultMedicalRecordsList.add(adultMedicalRecord);
+
+		when(medicalRecordRepository.findByFirstNameAndLastName(person.getFirstName(),
+				person.getLastName())).thenReturn(adultMedicalRecordsList);
+
+		int result = util.getAge(person);
+
+		assertTrue(result == -1);
+		assertFalse(result == 20);
+
+	}
+	
+	@Test
+	public void testGetAgeWithoutMedicalRecord() {
+		Person person = new Person(0L, "Jack", "Black", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
+
+
+		when(medicalRecordRepository.findByFirstNameAndLastName(person.getFirstName(),
+				person.getLastName())).thenReturn(null);
+
+		int result = util.getAge(person);
+
+		assertTrue(result == -1);
+		assertFalse(result == 20);
+
+	}
+	
+	@Test
+	public void testGetAgeWithException() {
+		
+		Person person = new Person(0L, "firstName", "lastName", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
+
+		when(medicalRecordRepository.findByFirstNameAndLastName("firstName", "lastName")).thenThrow(NullPointerException.class);
+		util.getAge(person);
+		assertThrows(Exception.class, () -> {medicalRecordRepository.findByFirstNameAndLastName("firstName", "lastName");});
+	}
+	
+	@Test
+	public void testCalulateAgeWithException() {
+	
+		when(birthdate.toInstant()).thenThrow(NullPointerException.class);
+			
+		util.calculateAge(birthdate);
+		
+		assertThrows(Exception.class, () -> {birthdate.toInstant();});
 
 	}
 

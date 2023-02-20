@@ -10,6 +10,7 @@ import lombok.Data;
 
 @Data
 public class JsonFileReader {
+	
 	private List<Person> persons;
 	private List<FireStation> firestations;
 	private List<MedicalRecord> medicalrecords;

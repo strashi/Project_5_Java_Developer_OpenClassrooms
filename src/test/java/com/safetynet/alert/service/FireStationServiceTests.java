@@ -3,6 +3,7 @@ package com.safetynet.alert.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,11 +71,11 @@ public class FireStationServiceTests {
 
 		verify(fireStationRepository, times(1)).save(newFireStation);
 	}
-
+		
 	@Test
 	public void testAddStationWithException() {
-
 		FireStation fireStation = new FireStation();
+		
 		when(fireStationRepository.save(fireStation)).thenThrow(NullPointerException.class);
 
 		FireStation newfireStation = fireStationService.addFireStation(fireStation);
@@ -82,15 +83,14 @@ public class FireStationServiceTests {
 		assertThrows(Exception.class, () -> {
 			fireStationRepository.save(fireStation);
 		});
+		assertNull(newfireStation);
 
 	}
 
 	@Test
 	public void testUpdateFireStation() {
-
-		String address = "address";
-		FireStation fireStation1 = new FireStation(0L, address, 1);
-		FireStation fireStation2 = new FireStation(0L, address, 2);
+		FireStation fireStation1 = new FireStation(0L, "address", 1);
+		FireStation fireStation2 = new FireStation(0L, "address", 2);
 
 		List<FireStation> listOfOldFireStations = new ArrayList<>();
 		listOfOldFireStations.add(fireStation1);
@@ -100,27 +100,25 @@ public class FireStationServiceTests {
 		newStations.add(6);
 		newStations.add(7);
 
-		when(fireStationRepository.findByAddress(address)).thenReturn(listOfOldFireStations);
+		when(fireStationRepository.findByAddress("address")).thenReturn(listOfOldFireStations);
 		when(fireStationRepository.saveAll(any(List.class))).thenReturn(null);
 
-		List<FireStation> fireStationResponse = fireStationService.updateFireStation(address, newStations);
+		List<FireStation> fireStationResponse = fireStationService.updateFireStation("address", newStations);
 
 		assertEquals(fireStationResponse.get(0).getStation(), 6);
 		assertEquals(fireStationResponse.get(1).getStation(), 7);
 		assertFalse(fireStationResponse.get(0).getStation() == 1);
 		assertFalse(fireStationResponse.get(1).getStation() == 2);
 
-		verify(fireStationRepository, times(1)).findByAddress(address);
+		verify(fireStationRepository, times(1)).findByAddress("address");
 		verify(fireStationRepository, times(1)).saveAll(any(List.class));
 
 	}
-
+	
 	@Test
-	public void testUpdateFireStationWithException() {
-
-		String address = "address";
-		FireStation fireStation1 = new FireStation(0L, address, 1);
-		FireStation fireStation2 = new FireStation(0L, address, 2);
+	public void testUpdateFireStationWithResponseNoNull() {
+		FireStation fireStation1 = new FireStation(0L, "address", 1);
+		FireStation fireStation2 = new FireStation(0L, "address", 2);
 
 		List<FireStation> listOfOldFireStations = new ArrayList<>();
 		listOfOldFireStations.add(fireStation1);
@@ -129,20 +127,48 @@ public class FireStationServiceTests {
 		List<Integer> newStations = new ArrayList<>();
 		newStations.add(6);
 		newStations.add(7);
+				
+		FireStation fireStation3 = new FireStation(0L, "address", 6);
+		FireStation fireStation4 = new FireStation(0L, "address", 7);
 
-		when(fireStationRepository.findByAddress(address)).thenThrow(NullPointerException.class);
+		List<FireStation> listOfNewFireStations = new ArrayList<>();
+		listOfNewFireStations.add(fireStation1);
+		listOfNewFireStations.add(fireStation2);
+
+		when(fireStationRepository.findByAddress("address")).thenReturn(listOfOldFireStations);
+		when(fireStationRepository.saveAll(any(List.class))).thenReturn(listOfNewFireStations);
+
+		List<FireStation> fireStationResponse = fireStationService.updateFireStation("address", newStations);
+
+		assertEquals(fireStationResponse.get(0).getStation(), 6);
+		assertEquals(fireStationResponse.get(1).getStation(), 7);
+		assertFalse(fireStationResponse.get(0).getStation() == 1);
+		assertFalse(fireStationResponse.get(1).getStation() == 2);
+
+		verify(fireStationRepository, times(1)).findByAddress("address");
+		verify(fireStationRepository, times(1)).saveAll(any(List.class));
+
+	}
+
+	@Test
+	public void testUpdateFireStationWithException() {
+	
+		List<Integer> newStations = new ArrayList<>();
+		newStations.add(6);
+		newStations.add(7);
+
+		when(fireStationRepository.findByAddress("address")).thenThrow(NullPointerException.class);
 
 		List<FireStation> fireStationResponse = fireStationService.updateFireStation("address", newStations);
 
 		assertThrows(Exception.class, () -> {
-			fireStationRepository.findByAddress(address);
+			fireStationRepository.findByAddress("address");
 		});
 
 	}
 
 	@Test
 	public void testDeleteFireStation() {
-
 		FireStation fireStation = new FireStation(0L, "address", 2);
 
 		List<FireStation> fireStationToDeleteList = new ArrayList<>();
@@ -154,6 +180,21 @@ public class FireStationServiceTests {
 
 		verify(fireStationRepository, times(1)).deleteAll(fireStationToDeleteList);
 	}
+	
+	@Test
+	public void testDeleteFireStationWithStationNumber0AndAddressString() {
+
+		FireStation fireStation = new FireStation(0L, "string", 0);
+
+		List<FireStation> fireStationToDeleteList = new ArrayList<>();
+
+		doNothing().when(fireStationRepository).deleteAll(fireStationToDeleteList);
+
+		fireStationService.deleteFireStation(fireStation);
+
+		verify(fireStationRepository, times(1)).deleteAll(fireStationToDeleteList);
+	}
+
 
 	@Test
 	public void testDeleteFireStationWithException() {
@@ -238,16 +279,7 @@ public class FireStationServiceTests {
 	public void testCoveredPersonsByFireStationWithChildrenAdultCountWithException() {
 
 		FireStation fireStation = new FireStation(0L, "address", 2);
-		List<FireStation> listOfFireStations = new ArrayList<>();
-		listOfFireStations.add(fireStation);
-
-		Person adult = new Person(0L, "Jack", "Black", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
-		Person child = new Person(0L, "Jo", "White", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
-
-		List<Person> listOfPersons = new ArrayList<>();
-		listOfPersons.add(adult);
-		listOfPersons.add(child);
-
+	
 		when(fireStationRepository.findByStation(any(Integer.class))).thenThrow(NullPointerException.class);
 
 		ResponsePersonByFireStation response = fireStationService
@@ -261,8 +293,6 @@ public class FireStationServiceTests {
 
 	@Test
 	public void testFire() {
-
-		String address = "address";
 
 		// Creation of FireStation
 		FireStation fireStation = new FireStation(0L, "address", 2);
@@ -320,43 +350,40 @@ public class FireStationServiceTests {
 				childAllergies);
 		childMedicalRecordsList.add(childMedicalRecord);
 
-		when(fireStationRepository.findByAddress(address)).thenReturn(listOfFireStations);
-		when(personRepository.findByAddress(address)).thenReturn(residentsList);
+		when(fireStationRepository.findByAddress("address")).thenReturn(listOfFireStations);
+		when(personRepository.findByAddress("address")).thenReturn(residentsList);
 		when(modelMapper.map(child, PersonWithMedicalRecordDTO.class)).thenReturn(childWithMedicalRecord);
 		when(modelMapper.map(adult, PersonWithMedicalRecordDTO.class)).thenReturn(adultWithMedicalRecord);
 
 		when(util.getAge(adult)).thenReturn(73);
 		when(util.getAge(child)).thenReturn(13);
-		when(medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(adult.getFirstName(), adult.getLastName()))
+		when(medicalRecordRepository.findByFirstNameAndLastName(adult.getFirstName(), adult.getLastName()))
 				.thenReturn(adultMedicalRecordsList);
-		when(medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(child.getFirstName(), child.getLastName()))
+		when(medicalRecordRepository.findByFirstNameAndLastName(child.getFirstName(), child.getLastName()))
 				.thenReturn(childMedicalRecordsList);
 
-		ResponseFire response = fireStationService.fire(address);
+		ResponseFire response = fireStationService.fire("address");
 
-		assertTrue(response.getStation().size() == 1);
+		assertTrue(response.getStations().size() == 1);
 		assertTrue(response.getResidents().size() == 2);
 		assertTrue(response.getResidents().get(0).getAllergies().size() == 1);
 		assertTrue(response.getResidents().get(0).getMedications().size() == 2);
 		assertTrue(response.getResidents().get(1).getAllergies().size() == 0);
 		assertTrue(response.getResidents().get(1).getMedications().size() == 0);
 
-		verify(medicalRecordRepository, times(2)).findMedicalRecordByFirstNameAndLastName(any(String.class),
+		verify(medicalRecordRepository, times(2)).findByFirstNameAndLastName(any(String.class),
 				any(String.class));
 
 	}
 
 	@Test
 	public void testFireWithException() {
+		when(fireStationRepository.findByAddress("address")).thenThrow(NullPointerException.class);
 
-		String address = "address";
-
-		when(fireStationRepository.findByAddress(address)).thenThrow(NullPointerException.class);
-
-		ResponseFire response = fireStationService.fire(address);
+		ResponseFire response = fireStationService.fire("address");
 
 		assertThrows(Exception.class, () -> {
-			fireStationRepository.findByAddress(address);
+			fireStationRepository.findByAddress("address");
 		});
 
 	}
@@ -435,98 +462,31 @@ public class FireStationServiceTests {
 
 		when(util.getAge(adult)).thenReturn(73);
 		when(util.getAge(child)).thenReturn(13);
-		when(medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(adult.getFirstName(), adult.getLastName()))
+		when(medicalRecordRepository.findByFirstNameAndLastName(adult.getFirstName(), adult.getLastName()))
 				.thenReturn(adultMedicalRecordsList);
-		when(medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(child.getFirstName(), child.getLastName()))
+		when(medicalRecordRepository.findByFirstNameAndLastName(child.getFirstName(), child.getLastName()))
 				.thenReturn(childMedicalRecordsList);
 
 		ResponseFlood response = fireStationService.flood(listOfInteger);
-
+		System.out.println(response);
 		assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0)
 				.getListOfPersonsWithMedicalRecordDTO().get(1).getMedications().size() == 0);
 		assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0)
 				.getListOfPersonsWithMedicalRecordDTO().get(1).getAllergies().size() == 0);
-		assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0)
+		assertEquals(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0)
 				.getListOfPersonsWithMedicalRecordDTO().get(0).getMedications().get(0).getMedication()
-				.toString() == "aznol 350mg");
-		// assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0).getListOfPersonsWithMedicalRecordDTO().get(0).getMedications().size()
-		// == 2);
-		assertTrue(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0)
+				.toString(),"aznol 350mg");
+		assertEquals(response.getResidentsByStation().get(0).getAddressesServedByFireStation().get(0)
 				.getListOfPersonsWithMedicalRecordDTO().get(0).getMedications().get(1).getMedication()
-				.toString() == "jus d'ail 3x par jour");
+				.toString() , "jus d'ail 3x par jour");
 
-		verify(medicalRecordRepository, times(8)).findMedicalRecordByFirstNameAndLastName(any(String.class),
+		verify(medicalRecordRepository, times(8)).findByFirstNameAndLastName(any(String.class),
 				any(String.class));
 	}
 
 	@Test
 	public void testFloodWithException() {
-		// Creation of list of integer
 		List<Integer> listOfInteger = new ArrayList<>();
-		listOfInteger.add(1);
-		listOfInteger.add(2);
-		// Creation of 2 list of firestations
-		List<FireStation> listOfStations1 = new ArrayList<>();
-		FireStation fireStation1 = new FireStation(0L, "address1", 1);
-		listOfStations1.add(fireStation1);
-		FireStation fireStation2 = new FireStation(0L, "address2", 1);
-		listOfStations1.add(fireStation2);
-
-		List<FireStation> listOfStations2 = new ArrayList<>();
-		FireStation fireStation3 = new FireStation(0L, "address3", 2);
-		listOfStations2.add(fireStation3);
-		FireStation fireStation4 = new FireStation(0L, "address4", 2);
-		listOfStations2.add(fireStation4);
-
-		// Creation of list of residents
-		List<Person> residentsList = new ArrayList<>();
-		Person adult = new Person(0L, "Jack", "Black", "address1", "Moscou", 112233, "052156", "mail@box.xyz");
-		Person child = new Person(0L, "Jo", "White", "address1", "Moscou", 112233, "052156", "mail@box.xyz");
-
-		residentsList.add(adult);
-		residentsList.add(child);
-
-		// Creation of Persons With empties MedicalRecords
-		List<Medication> childMedicationsEmpty = new ArrayList<>();
-
-		List<Allergie> childAllergiesEmpty = new ArrayList<>();
-
-		List<Medication> adultMedicationsEmpty = new ArrayList<>();
-
-		List<Allergie> adultAllergiesEmpty = new ArrayList<>();
-
-		PersonWithMedicalRecordDTO childWithMedicalRecord = new PersonWithMedicalRecordDTO("Jo", "White", "052156", -1,
-				childMedicationsEmpty, childAllergiesEmpty);
-		PersonWithMedicalRecordDTO adultWithMedicalRecord = new PersonWithMedicalRecordDTO("Jack", "Black", "052156",
-				-1, adultMedicationsEmpty, adultAllergiesEmpty);
-
-		// Creation of MedicalRecords
-		List<Medication> adultMedications = new ArrayList<>();
-		List<Allergie> adultAllergies = new ArrayList<>();
-		List<Medication> childMedications = new ArrayList<>();
-
-		List<Allergie> childAllergies = new ArrayList<>();
-
-		Date childBirthday = new Date(01 / 01 / 2010);
-		Date adultBirthday = new Date(01 / 01 / 1950);
-
-		Medication medication1 = new Medication("aznol 350mg");
-		Medication medication2 = new Medication("jus d'ail 3x par jour");
-		adultMedications.add(medication1);
-		adultMedications.add(medication2);
-
-		Allergie allergie = new Allergie("glutène");
-		adultAllergies.add(allergie);
-
-		List<MedicalRecord> adultMedicalRecordsList = new ArrayList<>();
-		MedicalRecord adultMedicalRecord = new MedicalRecord(0L, "Jack", "Black", adultBirthday, adultMedications,
-				adultAllergies);
-		adultMedicalRecordsList.add(adultMedicalRecord);
-
-		List<MedicalRecord> childMedicalRecordsList = new ArrayList<>();
-		MedicalRecord childMedicalRecord = new MedicalRecord(0L, "Jo", "White", childBirthday, childMedications,
-				childAllergies);
-		childMedicalRecordsList.add(childMedicalRecord);
 
 		when(fireStationRepository.findByStation(1)).thenThrow(NullPointerException.class);
 
@@ -545,6 +505,9 @@ public class FireStationServiceTests {
 
 		assertFalse(fireStationService.equals(service));
 		assertFalse(fireStationService.toString().equals(service.toString()));
+	
 	}
+	
+
 
 }

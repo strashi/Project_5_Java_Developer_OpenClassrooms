@@ -46,12 +46,13 @@ public class UtilServiceImpl implements UtilService{
 		try {
 
 			List<MedicalRecord> medicalRecords = medicalRecordRepository
-					.findMedicalRecordByFirstNameAndLastName(person.getFirstName(), person.getLastName());
+					.findByFirstNameAndLastName(person.getFirstName(), person.getLastName());
 			for (MedicalRecord medicalRecord : medicalRecords) {
 				if (medicalRecord.getBirthdate() != null) {
+					int response = calculateAge(medicalRecord.getBirthdate());
 					logger.debug("traitement getAge réussi chez UtilServiceImpl");
 
-					return calculateAge(medicalRecord.getBirthdate());
+					return response;
 				}
 			}
 			return -1;

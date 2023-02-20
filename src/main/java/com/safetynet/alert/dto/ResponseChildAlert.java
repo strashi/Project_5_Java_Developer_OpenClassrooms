@@ -9,6 +9,5 @@ import lombok.Data;
 public class ResponseChildAlert {
 
 	private List<PersonDTO> childrenList = new ArrayList<>();
-	
-	private List<PersonDTO> adultList = new ArrayList<>();
+	private List<PersonDTO> adultsList = new ArrayList<>();
 }

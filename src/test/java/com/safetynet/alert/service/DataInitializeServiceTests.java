@@ -1,7 +1,6 @@
 package com.safetynet.alert.service;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,7 +32,6 @@ public class DataInitializeServiceTests {
 	
 	@Test
 	public void testReadJsonFile() {
-			
 		when(personRepository.saveAll(any(Iterable.class))).thenReturn(null);
 		when(fireStationRepository.saveAll(any(Iterable.class))).thenReturn(null);
 		when(medicalRecordRepository.saveAll(any(Iterable.class))).thenReturn(null);
@@ -43,6 +41,16 @@ public class DataInitializeServiceTests {
 		verify(personRepository, times(1)).saveAll(any(Iterable.class));
 		verify(fireStationRepository, times(1)).saveAll(any(Iterable.class));
 		verify(medicalRecordRepository, times(1)).saveAll(any(Iterable.class));
+	}
+	
+	@Test
+	public void testReadJsonFileWithException() {
+		when(personRepository.saveAll(any(Iterable.class))).thenThrow(NullPointerException.class);
+					
+		dataInitializeService.readJsonFile();
+		
+		verify(personRepository, times(1)).saveAll(any(Iterable.class));
+	
 	}
 
 }

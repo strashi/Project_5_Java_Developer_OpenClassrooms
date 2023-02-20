@@ -39,7 +39,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 		logger.debug("traitement addMedicalRecord en cours chez MedicalRecordServiceImpl");
 		List<MedicalRecord> updatedMedicalRecordList = new ArrayList<>();
 		try {
-			List<MedicalRecord> newMedicalRecordList = medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(
+			List<MedicalRecord> newMedicalRecordList = medicalRecordRepository.findByFirstNameAndLastName(
 					updatedMedicalRecord.getFirstName(), updatedMedicalRecord.getLastName());
 			for(MedicalRecord newMedicalRecord : newMedicalRecordList) {
 				newMedicalRecord.setBirthdate(updatedMedicalRecord.getBirthdate());
@@ -47,12 +47,8 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 				newMedicalRecord.setAllergies(updatedMedicalRecord.getAllergies());
 				updatedMedicalRecordList.add(newMedicalRecord);
 			}
-			 List<MedicalRecord> response = new ArrayList<>();
-			 if(medicalRecordRepository.saveAll(updatedMedicalRecordList) != null)
-				 response = medicalRecordRepository.saveAll(updatedMedicalRecordList);
-			 else
-				 response = updatedMedicalRecordList;
-
+			 List<MedicalRecord> response = medicalRecordRepository.saveAll(updatedMedicalRecordList);
+			 response = (response != null) ? response : updatedMedicalRecordList;
 			logger.info("traitement addMedicalRecord réussi chez MedicalRecordServiceImpl!");
 			return response;
 			
@@ -66,7 +62,7 @@ public class MedicalRecordServiceImpl implements MedicalRecordService {
 	public void deleteMedicalRecordByFirstNameAndLastName(String firstName, String lastName) {
 		logger.debug("traitement deleteMedicalRecord en cours chez MedicalRecordServiceImpl");
 		try {
-			List<MedicalRecord> medicalRecordToDeleteList = medicalRecordRepository.findMedicalRecordByFirstNameAndLastName(firstName,
+			List<MedicalRecord> medicalRecordToDeleteList = medicalRecordRepository.findByFirstNameAndLastName(firstName,
 					lastName);
 			medicalRecordRepository.deleteAll(medicalRecordToDeleteList);
 		

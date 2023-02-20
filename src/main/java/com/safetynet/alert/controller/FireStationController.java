@@ -31,8 +31,9 @@ public class FireStationController {
 	public FireStation addFireStation(@RequestBody FireStation fireStation) {
 		logger.debug("requête addFireStation envoyée de FireStationController");
 		try {
+			FireStation response = fireStationService.addFireStation(fireStation);
 			logger.info("requête addFireStation réussie chez FireStationController!");
-			return fireStationService.addFireStation(fireStation);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -43,8 +44,9 @@ public class FireStationController {
 	public List<FireStation> updateFireStation(@RequestParam String address, @RequestParam List<Integer> stations) {
 		logger.debug("requête updateFireStation envoyée de FireStationController");
 		try {
+			List<FireStation> response = fireStationService.updateFireStation(address, stations);
 			logger.info("requête updateFireStation réussie chez FireStationController!");
-			return fireStationService.updateFireStation(address, stations);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -68,8 +70,10 @@ public class FireStationController {
 			@RequestParam Integer stationNumber) {
 		logger.debug("requête coveredPersonsByFireStation envoyée de FireStationController");
 		try {
+			ResponsePersonByFireStation response = fireStationService
+					.coveredPersonsByFireStationWithChildrenAdultCount(stationNumber);
 			logger.info("requête coveredPersonsByFireStation réussie chez FireStationController!");
-			return fireStationService.coveredPersonsByFireStationWithChildrenAdultCount(stationNumber);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -80,8 +84,9 @@ public class FireStationController {
 	public List<String> phoneAlert(@RequestParam Integer firestation) {
 		logger.debug("requête phoneAlert envoyée de FireStationController");
 		try {
+			List<String> response = fireStationService.phoneAlert(firestation);
 			logger.info("requête phoneAlert réussie chez FireStationController!");
-			return fireStationService.phoneAlert(firestation);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -92,8 +97,9 @@ public class FireStationController {
 	public ResponseFire fire(@RequestParam String address) {
 		logger.debug("requête fire envoyée de FireStationController");
 		try {
+			ResponseFire response = fireStationService.fire(address);
 			logger.info("requête fire réussie chez FireStationController!");
-			return fireStationService.fire(address);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -104,8 +110,9 @@ public class FireStationController {
 	public ResponseFlood flood(@RequestParam List<Integer> list_of_station_number) {
 		logger.debug("requête flood envoyée de FireStationController");
 		try {
+			ResponseFlood response = fireStationService.flood(list_of_station_number);
 			logger.info("requête flood réussie chez FireStationController!");
-			return fireStationService.flood(list_of_station_number);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;

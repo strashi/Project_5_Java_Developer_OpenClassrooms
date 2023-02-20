@@ -53,8 +53,8 @@ public class MedicalRecordController {
 	public void deleteMedicalRecordByFirstNameLastName(@RequestParam String firstName, @RequestParam String lastName) {
 		logger.debug("requête deleteMedicalRecord envoyée de MedicalRecordController");
 		try {
-			logger.info("requête deleteMedicalRecord réussie chez MedicalRecordController!");
 			medicalRecordService.deleteMedicalRecordByFirstNameAndLastName(firstName, lastName);
+			logger.info("requête deleteMedicalRecord réussie chez MedicalRecordController!");
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 		}

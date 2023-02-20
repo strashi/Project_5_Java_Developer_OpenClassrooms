@@ -31,13 +31,10 @@ public class PersonController {
 		logger.debug("requête ajouter une personne envoyée de PersonController");
 		try {
 			Person response = personService.addPerson(person);
-
 			logger.info("requête ajouter une personne réussie chez PersonController!");
 			return response;
-
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
-
 			return null;
 		}
 
@@ -47,8 +44,9 @@ public class PersonController {
 	public List<Person> updatePerson(@RequestBody Person person) {
 		logger.debug("requête updatePerson envoyée de PersonController");
 		try {
+			List<Person> response = personService.updatePerson(person);
 			logger.info("requête updatePerson réussie chez PersonController!");
-			return personService.updatePerson(person);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -59,8 +57,8 @@ public class PersonController {
 	public void deletePersonByFirstNameAndLastName(@RequestParam String firstName, @RequestParam String lastName) {
 		logger.debug("requête deletePerson envoyée de PersonController");
 		try {
-			logger.info("requête deletePerson réussie chez PersonController!");
 			personService.deletePersonByFirstNameAndLastName(firstName, lastName);
+			logger.info("requête deletePerson réussie chez PersonController!");
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 
@@ -71,8 +69,9 @@ public class PersonController {
 	public List<String> listOfEmailByCity(@RequestParam String city) {
 		logger.debug("requête list of email envoyée de PersonController");
 		try {
+			List<String> response = personService.listOfEmailByCity(city);
 			logger.info("requête list of email réussie chez PersonController!");
-			return personService.listOfEmailByCity(city);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -83,8 +82,9 @@ public class PersonController {
 	public ResponseChildAlert childAlert(@RequestParam String address) {
 		logger.debug("requête childAlert envoyée de PersonController");
 		try {
+			ResponseChildAlert response = personService.childAlert(address);
 			logger.info("requête childAlert réussie chez PersonController!");
-			return personService.childAlert(address);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;
@@ -96,8 +96,9 @@ public class PersonController {
 	public ResponsePersonInfo personInfo(@RequestParam String firstName, @RequestParam String lastName) {
 		logger.debug("requête personInfo envoyée de PersonController");
 		try {
+			ResponsePersonInfo response = personService.personInfo(firstName, lastName);
 			logger.info("requête personInfo réussie chez PersonController!");
-			return personService.personInfo(firstName, lastName);
+			return response;
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 			return null;

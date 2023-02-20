@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.safetynet.alert.dto.InfoPerson;
+import com.safetynet.alert.dto.PersonInfo;
 import com.safetynet.alert.dto.PersonDTO;
 import com.safetynet.alert.dto.ResponseChildAlert;
 import com.safetynet.alert.dto.ResponsePersonInfo;
@@ -57,7 +57,7 @@ public class PersonServiceImpl implements PersonService {
 	public List<Person> updatePerson(Person updatedPerson) {
 		logger.debug("traitement updatePerson en cours chez PersonServiceImpl");
 		try {
-			List<Person> personList = personRepository.findPersonByFirstNameAndLastName(updatedPerson.getFirstName(),
+			List<Person> personList = personRepository.findByFirstNameAndLastName(updatedPerson.getFirstName(),
 					updatedPerson.getLastName());
 			List<Person> newPersonList = new ArrayList<Person>();
 			for (Person newPerson : personList) {
@@ -68,13 +68,9 @@ public class PersonServiceImpl implements PersonService {
 				newPerson.setEmail(updatedPerson.getEmail());
 				newPersonList.add(newPerson);
 			}
-			List<Person> response = new ArrayList<>();
-
-			if (personRepository.saveAll(newPersonList) != null)
-				response = personRepository.saveAll(newPersonList);
-			else
-				response = newPersonList;
-
+			List<Person> response = personRepository.saveAll(newPersonList);
+			response = (response != null) ? response : newPersonList;
+			
 			logger.info("traitement updatePerson réussi chez PersonServiceImpl!");
 			return response;
 
@@ -88,12 +84,8 @@ public class PersonServiceImpl implements PersonService {
 	public void deletePersonByFirstNameAndLastName(String firstName, String lastName) {
 		logger.debug("traitement deletePerson en cours chez PersonServiceImpl");
 		try {
-
-			List<Person> personToDeleteList = personRepository.findPersonByFirstNameAndLastName(firstName, lastName);
-
-			for (Person person : personToDeleteList) {
-				personRepository.delete(person);
-			}
+			List<Person> personToDeleteList = personRepository.findByFirstNameAndLastName(firstName, lastName);
+			personRepository.deleteAll(personToDeleteList);
 			logger.info("traitement deletePerson réussi chez PersonServiceImpl!");
 
 		} catch (Exception e) {
@@ -129,7 +121,7 @@ public class PersonServiceImpl implements PersonService {
 				if (personDTO.getAge() < 19)
 					response.getChildrenList().add(personDTO);
 				else
-					response.getAdultList().add(personDTO);
+					response.getAdultsList().add(personDTO);
 			}
 			logger.info("traitement childAlert réussi chez PersonServiceImpl!");
 			return response;
@@ -145,18 +137,18 @@ public class PersonServiceImpl implements PersonService {
 		try {
 			ResponsePersonInfo response = new ResponsePersonInfo();
 
-			List<Person> personList = personRepository.findAllByFirstNameAndLastName(firstName, lastName);
+			List<Person> personList = personRepository.findByFirstNameAndLastName(firstName, lastName);
 			for (Person person : personList) {
-				InfoPerson infoPerson = modelMapper.map(person, InfoPerson.class);
+				PersonInfo infoPerson = modelMapper.map(person, PersonInfo.class);
 				infoPerson.setAge(util.getAge(person));
 				List<MedicalRecord> medicalRecordsList = medicalRecordRepository
-						.findMedicalRecordByFirstNameAndLastName(firstName, lastName);
+						.findByFirstNameAndLastName(firstName, lastName);
 				for (MedicalRecord medicalRecord : medicalRecordsList) {
 					infoPerson.getMedications().addAll(medicalRecord.getMedications());
 					infoPerson.getAllergies().addAll(medicalRecord.getAllergies());
 				}
 
-				response.getInfosPersons().add(infoPerson);
+				response.getPersonInfosList().add(infoPerson);
 			}
 			logger.info("traitement personInfo réussi chez PersonServiceImpl!");
 			return response;

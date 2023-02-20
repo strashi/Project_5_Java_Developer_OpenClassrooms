@@ -11,15 +11,13 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class InfoPerson {
+public class PersonInfo {
 	
 	private String firstName;
 	private String lastName;
 	private String email;
 	private int age;
-
 	List<Medication> medications = new ArrayList<>();
-	
 	List<Allergie> allergies = new ArrayList<>();
 
 	

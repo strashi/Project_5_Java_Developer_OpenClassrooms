@@ -1,5 +1,6 @@
 package com.safetynet.alert.controller;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alert.model.Person;
-import com.safetynet.alert.repository.PersonRepository;
 import com.safetynet.alert.service.PersonService;
 
 @WebMvcTest(controllers = PersonController.class)
@@ -36,12 +35,18 @@ public class PersonControllerTests {
 	@MockBean
 	private PersonService personService;
 
-	@Mock
-	private PersonRepository personRepository;
-
 	@Test
 	public void testAddPerson() throws Exception {
 		Person person = new Person();
+		
+		mockMvc.perform(post("/person").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(person))).andExpect(status().isOk()).andDo(print());
+	}
+	
+	@Test
+	public void testAddPersonWithException() throws Exception {
+		Person person = new Person();
+		when(personService.addPerson(person)).thenThrow(NullPointerException.class);
 
 		mockMvc.perform(post("/person").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(person))).andExpect(status().isOk()).andDo(print());
@@ -49,8 +54,17 @@ public class PersonControllerTests {
 
 	@Test
 	public void testUpDatePerson() throws Exception {
-
 		Person updatedperson = new Person();
+
+		mockMvc.perform(put("/person").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(updatedperson))).andExpect(status().isOk()).andDo(print());
+	}
+	
+	@Test
+	public void testUpDatePersonWithException() throws Exception {
+		Person updatedperson = new Person();
+		
+		when(personService.updatePerson(updatedperson)).thenThrow(NullPointerException.class);
 
 		mockMvc.perform(put("/person").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(updatedperson))).andExpect(status().isOk()).andDo(print());
@@ -58,11 +72,16 @@ public class PersonControllerTests {
 
 	@Test
 	public void testDeletePerson() throws Exception {
+		mockMvc.perform(delete("/person").param("firstName", "firstName").param("lastName", "lastName"))
+				.andExpect(status().isOk()).andDo(print());
+	}
+	
+	@Test
+	public void testDeletePersonWithException() throws Exception {
+		
+		doThrow(NullPointerException.class).when(personService).deletePersonByFirstNameAndLastName("firstName","lastName");
 
-		String firstName = "firstName";
-		String lastName = "lastName";
-
-		mockMvc.perform(delete("/person").param(firstName, firstName).param(lastName, lastName))
+		mockMvc.perform(delete("/person").param("firstName", "firstName").param("lastName", "lastName"))
 				.andExpect(status().isOk()).andDo(print());
 	}
 
@@ -76,15 +95,42 @@ public class PersonControllerTests {
 		when(personService.listOfEmailByCity(city)).thenReturn(list);
 		mockMvc.perform(get("/communityEmail").param(city, city)).andExpect(status().isOk()).andDo(print());
 	}
+	
+	@Test
+	public void testlistOfEmailByCityWithException() throws Exception {
+		String city = "city";
+		List<String> list = new ArrayList<>();
+		list.add("mail");
+		list.add("mail2");
+		list.add("mail3");
+		
+		when(personService.listOfEmailByCity(city)).thenThrow(NullPointerException.class);
+		
+		mockMvc.perform(get("/communityEmail").param(city, city)).andExpect(status().isOk()).andDo(print());
+	}
+
 
 	@Test
 	public void testChildAlert() throws Exception {
+		mockMvc.perform(get("/childAlert").param("address", "address")).andExpect(status().isOk()).andDo(print());
+	}
+
+	@Test
+	public void testChildAlertWithException() throws Exception {
+		when(personService.childAlert("address")).thenThrow(NullPointerException.class);
 
 		mockMvc.perform(get("/childAlert").param("address", "address")).andExpect(status().isOk()).andDo(print());
 	}
 
 	@Test
 	public void testPersonInfo() throws Exception {
+		mockMvc.perform(get("/personInfo").param("firstName", "firstName").param("lastName", "lastName"))
+				.andExpect(status().isOk()).andDo(print());
+	}
+	
+	@Test
+	public void testPersonInfoWithException() throws Exception {
+		when(personService.personInfo("firstName","lastName")).thenThrow(NullPointerException.class);
 
 		mockMvc.perform(get("/personInfo").param("firstName", "firstName").param("lastName", "lastName"))
 				.andExpect(status().isOk()).andDo(print());

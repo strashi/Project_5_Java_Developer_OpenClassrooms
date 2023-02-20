@@ -7,6 +7,5 @@ import com.safetynet.alert.model.Person;
 public interface UtilService {
 	
 	int calculateAge(Date birthdate);
-	
 	int getAge(Person person);
 }

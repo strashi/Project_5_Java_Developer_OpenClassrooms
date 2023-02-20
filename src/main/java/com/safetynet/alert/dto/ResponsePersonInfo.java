@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 public class ResponsePersonInfo {
 	
-	private List<InfoPerson> infosPersons = new ArrayList<>();
+	private List<PersonInfo> personInfosList = new ArrayList<>();
 
 }

@@ -9,9 +9,6 @@ import lombok.Data;
 public class ResidentsByStation {
 	
 	private String stationNumber;
-	
 	private List<Address> addressesServedByFireStation = new ArrayList<>();
-	
-	
-	
+		
 }

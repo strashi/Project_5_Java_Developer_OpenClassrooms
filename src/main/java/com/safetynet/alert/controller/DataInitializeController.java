@@ -20,8 +20,8 @@ public class DataInitializeController {
 	public void loadData() {
 		logger.debug("requête loadData envoyée de PersonController");
 		try {
-			logger.info("requête loadData réussie chez PersonController!");
 			dataInitializeService.readJsonFile();
+			logger.info("requête loadData réussie chez PersonController!");
 		} catch (Exception e) {
 			logger.error("marche pas :(", e);
 

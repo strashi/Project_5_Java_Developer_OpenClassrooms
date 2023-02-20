@@ -1,5 +1,7 @@
 package com.safetynet.alert.controller;
 
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -26,12 +28,20 @@ public class MedicalRecordControllerTests {
 	private ObjectMapper objectMapper;
 
 	@MockBean
-	private MedicalRecordService MedicalRecordService;
+	private MedicalRecordService medicalRecordService;
 
 	@Test
 	public void testAddMedicalRecord() throws Exception {
-
 		MedicalRecord medicalRecord = new MedicalRecord();
+
+		mockMvc.perform(post("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(medicalRecord))).andExpect(status().isOk()).andDo(print());
+	}
+	
+	@Test
+	public void testAddMedicalRecordWithException() throws Exception {
+		MedicalRecord medicalRecord = new MedicalRecord();
+		when(medicalRecordService.addMedicalRecord(medicalRecord)).thenThrow(NullPointerException.class);
 
 		mockMvc.perform(post("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(medicalRecord))).andExpect(status().isOk()).andDo(print());
@@ -39,15 +49,29 @@ public class MedicalRecordControllerTests {
 
 	@Test
 	public void testUpdateMedicalRecord() throws Exception {
-
 		MedicalRecord medicalRecord = new MedicalRecord();
 
 		mockMvc.perform(put("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(medicalRecord))).andExpect(status().isOk()).andDo(print());
 	}
+	
+	@Test
+	public void testUpdateMedicalRecordWithException() throws Exception {
+		MedicalRecord medicalRecord = new MedicalRecord();
+		when(medicalRecordService.updateMedicalRecord(medicalRecord)).thenThrow(NullPointerException.class);
 
+
+		mockMvc.perform(put("/medicalRecord").contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(medicalRecord))).andExpect(status().isOk()).andDo(print());
+	}
 	@Test
 	public void testDeleteMedicalRecord() throws Exception {
+		mockMvc.perform(delete("/medicalRecord").param("firstName", "firstName").param("lastName", "lastName"))
+				.andExpect(status().isOk()).andDo(print());
+	}
+	@Test
+	public void testDeleteMedicalRecordWithException() throws Exception {
+		doThrow(NullPointerException.class).when(medicalRecordService).deleteMedicalRecordByFirstNameAndLastName("firstName","lastName");
 
 		mockMvc.perform(delete("/medicalRecord").param("firstName", "firstName").param("lastName", "lastName"))
 				.andExpect(status().isOk()).andDo(print());

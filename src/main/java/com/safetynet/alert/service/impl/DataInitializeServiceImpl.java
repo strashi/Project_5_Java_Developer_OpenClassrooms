@@ -40,8 +40,9 @@ public class DataInitializeServiceImpl implements DataInitializeService {
 			medicalRecordRepository.saveAll(jsonFileReader.getMedicalrecords());
 			logger.info("traitement readJsonFile réussi chez DataInitializeServiceImpl!");
 
-		} catch (Exception ex) {
-			ex.printStackTrace();
+		} catch (Exception e) {
+			logger.error("marche pas :(", e);
+			
 		}
 	}
 

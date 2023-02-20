@@ -8,7 +8,6 @@ import com.safetynet.alert.model.Medication;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
@@ -19,9 +18,7 @@ public class PersonWithMedicalRecordDTO {
 	private String lastName;
 	private String phone;
 	private int age;
-	
 	List<Medication> medications = new ArrayList<>();
-	
 	List<Allergie> allergies = new ArrayList<>();
 
 }

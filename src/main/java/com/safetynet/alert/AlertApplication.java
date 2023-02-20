@@ -24,8 +24,7 @@ public class AlertApplication{
 	}
 	
 	@Bean
-	HttpTraceRepository httpTraceRepository()
-	{
+	HttpTraceRepository httpTraceRepository() {
 	  return new InMemoryHttpTraceRepository();
 	}
 		
