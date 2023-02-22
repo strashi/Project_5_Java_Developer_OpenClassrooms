@@ -54,23 +54,17 @@ public class PersonServiceTests {
 
 	@Test
 	public void testAddPerson() {
-
 		Person person = new Person(0L, "Jack", "Black", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
-
 		when(personRepository.save(person)).thenReturn(person);
 
 		Person savedPerson = personService.addPerson(person);
 
 		assertThat(savedPerson.equals(person));
-
 		verify(personRepository, times(1)).save(person);
 	}
-
 	@Test
 	public void testAddPersonWithException() {
-
 		Person person = new Person(0L, "Jack", "Black", "Blv Av", "Moscou", 112233, "052156", "mail@box.xyz");
-
 		when(personRepository.save(person)).thenThrow(NullPointerException.class);
 
 		Person savedPerson = personService.addPerson(person);
@@ -78,7 +72,6 @@ public class PersonServiceTests {
 		assertThrows(Exception.class, () -> {
 			personRepository.save(person);
 		});
-
 	}
 
 	@Test
