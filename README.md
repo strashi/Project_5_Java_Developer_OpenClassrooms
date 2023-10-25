@@ -14,5 +14,6 @@ Skills tested :
 # SafetyNetAlert
 
 Project realized with :
-- SpringBoot 2.5.7
+- SpringBoot 2.5.3
 - MySQL 8.0.35
+
