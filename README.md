@@ -17,3 +17,5 @@ Project realized with :
 - SpringBoot 2.5.3
 - MySQL 8.0.35
 
+A RESTful API who returns different treatments of data from a MySQL database.
+At first the database is populated from a JSON file.
